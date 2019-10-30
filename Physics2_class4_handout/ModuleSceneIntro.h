@@ -22,13 +22,17 @@ public:
 	p2List<PhysBody*> boxes;
 	p2List<PhysBody*> ricks;
 	p2List<PhysBody*> backgrounds;
+	
 
 	PhysBody* sensor;
 	bool sensed;
 
-	SDL_Texture* circle;
-	SDL_Texture* box;
-	SDL_Texture* rick;
-	SDL_Texture* background = NULL;
-	uint bonus_fx;
+	SDL_Texture* circle = nullptr;
+	SDL_Texture* box = nullptr;
+	SDL_Texture* rick = nullptr;
+	SDL_Texture* background = nullptr;
+
+	PhysBody* Physbackground = nullptr;
+
+	uint bonus_fx = 0;
 };
