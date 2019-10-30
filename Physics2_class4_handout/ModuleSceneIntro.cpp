@@ -24,7 +24,7 @@ bool ModuleSceneIntro::Start()
 	bool ret = true;
 
 	App->renderer->camera.x = 0;
-	App->renderer->camera.y = 0;
+	App->renderer->camera.y = -412;
 
 	circle = App->textures->Load("pinball/wheel.png"); 
 	box = App->textures->Load("pinball/crate.png");
@@ -37,6 +37,8 @@ bool ModuleSceneIntro::Start()
 	Physbackground->body->SetType(b2_staticBody);
 
 	sensor = App->physics->CreateRectangleSensor(SCREEN_WIDTH / 2, SCREEN_HEIGHT, SCREEN_WIDTH, 50, this);
+
+	CreateBall();
 
 	return ret;
 }
@@ -183,4 +185,10 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 		bodyB->GetPosition(x, y);
 		App->renderer->DrawCircle(x, y, 50, 100, 100, 100);
 	}*/
+}
+
+void ModuleSceneIntro::CreateBall()
+{
+	circles.add(App->physics->CreateCircle(597, 650, 15));
+	circles.getLast()->data->listener = this;
 }

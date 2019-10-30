@@ -16,6 +16,7 @@ public:
 	update_status Update();
 	bool CleanUp();
 	void OnCollision(PhysBody* bodyA, PhysBody* bodyB);
+	void CreateBall();
 
 public:
 	p2List<PhysBody*> circles;
@@ -25,7 +26,7 @@ public:
 	
 
 	PhysBody* sensor;
-	bool sensed;
+	bool sensed = false;
 
 	SDL_Texture* circle = nullptr;
 	SDL_Texture* box = nullptr;
