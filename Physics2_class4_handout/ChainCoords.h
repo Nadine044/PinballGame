@@ -2,7 +2,7 @@
 #define _CHAIN_COORDS_H
 
 //Background
-int backgroundChain[208] = {
+int backgroundChain[216] = {
 	130, 543,
 	134, 486,
 	57, 448,
@@ -106,6 +106,10 @@ int backgroundChain[208] = {
 	533, 373,
 	534, 448,
 	458, 486,
+	456, 534,
+	456, 534,
+	456, 534,
+	456, 534,
 	456, 534
 };
 
