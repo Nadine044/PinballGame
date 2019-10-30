@@ -30,7 +30,7 @@ bool ModuleSceneIntro::Start()
 	rick = App->textures->Load("pinball/rick_head.png");
 	bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
 
-	background = App->textures->Load("assets/images/Background.png");
+	background = App->textures->Load("assets/images/Background_finished.png");
 
 	Physbackground = App->physics->CreateChain(0, 0, backgroundChain, 208);
 	Physbackground->body->SetType(b2_staticBody);
