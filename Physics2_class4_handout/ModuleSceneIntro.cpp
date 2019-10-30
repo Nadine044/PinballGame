@@ -80,16 +80,6 @@ update_status ModuleSceneIntro::Update()
 		CreateBall();
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
-	{
-		App->renderer->camera.y+=3;
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
-	{
-		App->renderer->camera.y-=3;
-	}
-
 	if(App->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN)
 	{
 		// Pivot 0, 0
