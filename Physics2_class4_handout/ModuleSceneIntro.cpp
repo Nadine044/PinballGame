@@ -24,7 +24,7 @@ bool ModuleSceneIntro::Start()
 	bool ret = true;
 
 	App->renderer->camera.x = 0;
-	App->renderer->camera.y = -412;
+	App->renderer->camera.y = 0;
 
 	circle = App->textures->Load("pinball/wheel.png"); 
 	box = App->textures->Load("pinball/crate.png");
@@ -33,7 +33,7 @@ bool ModuleSceneIntro::Start()
 
 	background = App->textures->Load("assets/images/Background_finished.png");
 
-	Physbackground = App->physics->CreateChain(0, 0, backgroundChain, 208);
+	Physbackground = App->physics->CreateChain(0, 0, backgroundChain, 144);
 	Physbackground->body->SetType(b2_staticBody);
 
 	sensor = App->physics->CreateRectangleSensor(SCREEN_WIDTH / 2, SCREEN_HEIGHT, SCREEN_WIDTH, 50, this);
@@ -68,6 +68,16 @@ update_status ModuleSceneIntro::Update()
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 	{
 		backgrounds.add(App->physics->CreateChain(App->input->GetMouseX(), App->input->GetMouseY(), backgroundChain, 64));		
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
+	{
+		App->renderer->camera.y+=3;
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
+	{
+		App->renderer->camera.y-=3;
 	}
 
 	if(App->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN)
