@@ -113,4 +113,14 @@ int backgroundChain[216] = {
 	456, 534
 };
 
+// Pivot 0, 0
+int rightBlock[12] = {
+	406, 982,
+	464, 883,
+	485, 888,
+	478, 965,
+	418, 995,
+	407, 987
+};
+
 #endif // !_CHAIN_COORDS_H
