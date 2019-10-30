@@ -32,11 +32,17 @@ bool ModuleSceneIntro::Start()
 	bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
 
 	background = App->textures->Load("assets/images/Background_finished.png");
+	bouncerText = App->textures->Load("assets/images/Bouncer.png");
 
 	Physbackground = App->physics->CreateChain(0, 0, backgroundChain, 144);
 	Physbackground->body->SetType(b2_staticBody);
 
-	sensor = App->physics->CreateRectangleSensor(SCREEN_WIDTH / 2, SCREEN_HEIGHT, SCREEN_WIDTH, 50, this);
+	//597, 650, 15
+
+	bouncer = App->physics->CreateBouncer(597, 700, 22);
+	bouncer->listener = this;
+
+	//sensor = App->physics->CreateRectangleSensor(SCREEN_WIDTH / 2, SCREEN_HEIGHT, SCREEN_WIDTH, 50, this);
 
 	CreateBall();
 
@@ -47,6 +53,9 @@ bool ModuleSceneIntro::Start()
 bool ModuleSceneIntro::CleanUp()
 {
 	LOG("Unloading Intro scene");
+
+	App->textures->Unload(background);
+	App->textures->Unload(bouncerText);
 
 	return true;
 }
@@ -59,7 +68,6 @@ update_status ModuleSceneIntro::Update()
 	if(App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
 	{
 		circles.add(App->physics->CreateCircle(App->input->GetMouseX(), App->input->GetMouseY(), 25));
-		circles.getLast()->data->listener = this;
 	}
 
 	if(App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)
@@ -69,7 +77,7 @@ update_status ModuleSceneIntro::Update()
 
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 	{
-		backgrounds.add(App->physics->CreateChain(App->input->GetMouseX(), App->input->GetMouseY(), backgroundChain, 64));		
+		CreateBall();
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)

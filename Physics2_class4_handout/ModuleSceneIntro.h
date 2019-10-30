@@ -25,15 +25,17 @@ public:
 	p2List<PhysBody*> backgrounds;
 	
 
-	PhysBody* sensor;
+	//PhysBody* sensor;
 	bool sensed = false;
 
 	SDL_Texture* circle = nullptr;
 	SDL_Texture* box = nullptr;
 	SDL_Texture* rick = nullptr;
 	SDL_Texture* background = nullptr;
+	SDL_Texture* bouncerText = nullptr;
 
 	PhysBody* Physbackground = nullptr;
+	PhysBody* bouncer = nullptr;
 
 	uint bonus_fx = 0;
 };
