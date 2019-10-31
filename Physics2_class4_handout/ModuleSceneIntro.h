@@ -16,14 +16,13 @@ public:
 	update_status Update();
 	bool CleanUp();
 	void OnCollision(PhysBody* bodyA, PhysBody* bodyB);
-	void CreateBall();
 	void FollowBall();
 
 public:
 	p2List<PhysBody*> circles;
 	p2List<PhysBody*> backgrounds;
-	
-	p2List<PhysBody*> ball;
+
+	p2List_item<PhysBody*>* ballPos;
 	
 
 	//PhysBody* sensor;
@@ -36,6 +35,9 @@ public:
 
 	PhysBody* Physbackground = nullptr;
 	PhysBody* bouncer = nullptr;
+	PhysBody* ball = nullptr;
+
+	float rotate;
 
 	uint bonus_fx = 0;
 };

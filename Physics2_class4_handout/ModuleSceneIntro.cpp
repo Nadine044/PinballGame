@@ -26,24 +26,24 @@ bool ModuleSceneIntro::Start()
 	App->renderer->camera.x = 0;
 	App->renderer->camera.y = 0;
 
+	// Load textures
 	balls = App->textures->Load("assets/Player_control/ball.png"); 
 	bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
-
 	background = App->textures->Load("assets/Background/Background_finished.png");
 	bouncerText = App->textures->Load("assets/Player_control/bouncer.png");
 	HUD = App->textures->Load("assets/HUD/HUD.png");
 
+	// Create colliders map
 	Physbackground = App->physics->CreateChain(0, 0, backgroundChain, 144);
 	Physbackground->body->SetType(b2_staticBody);
 
-	//597, 650, 15
-
+	// Create colliders bouncer
 	bouncer = App->physics->CreateBouncer(597, 700, 22);
 	bouncer->listener = this;
 
-	//sensor = App->physics->CreateRectangleSensor(SCREEN_WIDTH / 2, SCREEN_HEIGHT, SCREEN_WIDTH, 50, this);
-
-	CreateBall();
+	// Create ball
+	ball = App->physics->CreateCircle(400, 650, 80);
+	ball->listener = this;
 
 	return ret;
 }
@@ -64,69 +64,24 @@ bool ModuleSceneIntro::CleanUp()
 // Update: draw background
 update_status ModuleSceneIntro::Update()
 {
-	if(App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
+	/*if(App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
 	{
-		ball.add(App->physics->CreateCircle(App->input->GetMouseX(), App->input->GetMouseY(), 15));
+		ball=App->physics->CreateCircle(App->input->GetMouseX(), App->input->GetMouseY(), 15);
 		ball.getLast()->data->listener = this;
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
-	{
-		CreateBall();
-	}
-
-	// All draw functions ------------------------------------------------------
-	p2List_item<PhysBody*>* c = circles.getFirst();
-
-	/*while(c != NULL)
-	{
-		int x, y;
-		c->data->GetPosition(x, y);
-		App->renderer->Blit(circle, x, y, NULL, 1.0f, c->data->GetRotation());
-		c = c->next;
-	}
-
-	c = boxes.getFirst();
-
-	while(c != NULL)
-	{
-		int x, y;
-		c->data->GetPosition(x, y);
-		App->renderer->Blit(box, x, y, NULL, 1.0f, c->data->GetRotation());
-		c = c->next;
-	}
-
-	c = ricks.getFirst();
-
-	while(c != NULL)
-	{
-		int x, y;
-		c->data->GetPosition(x, y);
-		App->renderer->Blit(rick, x, y, NULL, 1.0f, c->data->GetRotation());
-		c = c->next;
 	}*/
 
-	c = backgrounds.getFirst();
+	// All draw functions ------------------------------------------------------
 
-	while (c != NULL)
-	{
-		int x, y;
-		c->data->GetPosition(x, y);
-		App->renderer->Blit(background, x, y, NULL, 1.0f);
-		c = c->next;
-	}
-
-	while (c != NULL)
-	{
-		int x, y;
-		c->data->GetPosition(x, y);
-		App->renderer->Blit(balls, x, y, NULL, 1.0f, c->data->GetRotation());
-		c = c->next;
-	}
+	// Get ball position
+	int x, y;
+	ball->GetPosition(x, y);
+	rotate = ball->GetRotation();
+	App->renderer->camera.y = -y + 236;
 
 	// Blit to screen
 	App->renderer->Blit(background, 0, 0);
 	App->renderer->Blit(HUD, App->renderer->camera.x * (-1), App->renderer->camera.y * (-1));
+	App->renderer->Blit(balls, x, y, NULL, 1.0f, rotate, 16, 16);
 
 	return UPDATE_CONTINUE;
 }
@@ -151,13 +106,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	}*/
 }
 
-void ModuleSceneIntro::CreateBall()
-{
-	ball.add(App->physics->CreateCircle(597, 650, 15));
-	ball.getLast()->data->listener = this;
-}
-
 void ModuleSceneIntro::FollowBall()
 {
-
+	
 }
