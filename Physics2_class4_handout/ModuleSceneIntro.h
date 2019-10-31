@@ -17,20 +17,19 @@ public:
 	bool CleanUp();
 	void OnCollision(PhysBody* bodyA, PhysBody* bodyB);
 	void CreateBall();
+	void FollowBall();
 
 public:
 	p2List<PhysBody*> circles;
-	p2List<PhysBody*> boxes;
-	p2List<PhysBody*> ricks;
 	p2List<PhysBody*> backgrounds;
+	
+	p2List<PhysBody*> ball;
 	
 
 	//PhysBody* sensor;
 	bool sensed = false;
 
-	SDL_Texture* circle = nullptr;
-	SDL_Texture* box = nullptr;
-	SDL_Texture* rick = nullptr;
+	SDL_Texture* balls = nullptr;
 	SDL_Texture* background = nullptr;
 	SDL_Texture* bouncerText = nullptr;
 	SDL_Texture* HUD = nullptr;

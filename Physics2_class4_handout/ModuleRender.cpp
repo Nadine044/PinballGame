@@ -67,8 +67,9 @@ update_status ModuleRender::Update()
 		camera.y = lastPos.y;
 	}
 
+	
 	// Camera limits if you manually move the camera
-	if (camera.y < 46)
+	/*if (camera.y < 46)
 	{
 		if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
 			camera.y += speed;
@@ -78,7 +79,7 @@ update_status ModuleRender::Update()
 	{
 		if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
 			camera.y -= speed;
-	}
+	}*/
 	
 	return UPDATE_CONTINUE;
 }
