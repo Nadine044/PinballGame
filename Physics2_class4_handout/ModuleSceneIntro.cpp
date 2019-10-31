@@ -38,11 +38,12 @@ bool ModuleSceneIntro::Start()
 	Physbackground->body->SetType(b2_staticBody);
 
 	// Create colliders bouncer
-	bouncer = App->physics->CreateBouncer(597, 700, 22);
+	bouncer = App->physics->CreateBouncer(590, 1180, 22);
 	bouncer->listener = this;
 
 	// Create ball
-	ball = App->physics->CreateCircle(400, 650, 80);
+
+	ball = App->physics->CreateCircle(590, 384, 12);
 	ball->listener = this;
 
 	return ret;
@@ -73,10 +74,19 @@ update_status ModuleSceneIntro::Update()
 	// All draw functions ------------------------------------------------------
 
 	// Get ball position
+
 	int x, y;
 	ball->GetPosition(x, y);
+	int offset = 768;
 	rotate = ball->GetRotation();
-	App->renderer->camera.y = -y + 236;
+	App->renderer->camera.y = -y + 384;
+
+	if (y > offset)
+	{
+		App->renderer->camera.y = -384;
+	}
+
+	
 
 	// Blit to screen
 	App->renderer->Blit(background, 0, 0);
