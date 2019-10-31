@@ -31,8 +31,9 @@ bool ModuleSceneIntro::Start()
 	rick = App->textures->Load("pinball/rick_head.png");
 	bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
 
-	background = App->textures->Load("assets/images/Background_finished.png");
-	bouncerText = App->textures->Load("assets/images/Bouncer.png");
+	background = App->textures->Load("assets/Background/Background_finished.png");
+	bouncerText = App->textures->Load("assets/Player_control/bouncer.png");
+	HUD = App->textures->Load("assets/HUD/HUD.png");
 
 	Physbackground = App->physics->CreateChain(0, 0, backgroundChain, 144);
 	Physbackground->body->SetType(b2_staticBody);
@@ -56,6 +57,7 @@ bool ModuleSceneIntro::CleanUp()
 
 	App->textures->Unload(background);
 	App->textures->Unload(bouncerText);
+	App->textures->Unload(HUD);
 
 	return true;
 }
@@ -63,8 +65,6 @@ bool ModuleSceneIntro::CleanUp()
 // Update: draw background
 update_status ModuleSceneIntro::Update()
 {
-	App->renderer->Blit(background, 0, 0);
-
 	if(App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
 	{
 		circles.add(App->physics->CreateCircle(App->input->GetMouseX(), App->input->GetMouseY(), 25));
@@ -161,6 +161,10 @@ update_status ModuleSceneIntro::Update()
 		App->renderer->Blit(background, x, y, NULL, 1.0f);
 		c = c->next;
 	}
+
+	// Blit to screen
+	App->renderer->Blit(background, 0, 0);
+	App->renderer->Blit(HUD, App->renderer->camera.x * (-1), App->renderer->camera.y * (-1));
 
 	return UPDATE_CONTINUE;
 }

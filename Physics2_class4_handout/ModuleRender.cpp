@@ -11,6 +11,9 @@ ModuleRender::ModuleRender(Application* app, bool start_enabled) : Module(app, s
 	camera.x = camera.y = 0;
 	camera.w = SCREEN_WIDTH;
 	camera.h = SCREEN_HEIGHT;
+	lastPos.x = lastPos.y = 0;
+	lastPos.w = SCREEN_WIDTH;
+	lastPos.h = SCREEN_HEIGHT;
 }
 
 // Destructor
@@ -51,14 +54,31 @@ update_status ModuleRender::PreUpdate()
 // Update: debug camera
 update_status ModuleRender::Update()
 {
-	
+	lastPos.y = camera.y;
 	int speed = 3;
 
-	if(App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
-		App->renderer->camera.y += speed;
+	// Camera limits
+	if (camera.y < 46)
+	{
+		camera.y = lastPos.y;
+	}
+	if (camera.y > -412)
+	{
+		camera.y = lastPos.y;
+	}
 
-	if(App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
-		App->renderer->camera.y -= speed;
+	// Camera limits if you manually move the camera
+	if (camera.y < 46)
+	{
+		if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
+			camera.y += speed;
+	}
+
+	if (camera.y > -412)
+	{
+		if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
+			camera.y -= speed;
+	}
 	
 	return UPDATE_CONTINUE;
 }

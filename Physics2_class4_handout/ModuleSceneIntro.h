@@ -33,6 +33,7 @@ public:
 	SDL_Texture* rick = nullptr;
 	SDL_Texture* background = nullptr;
 	SDL_Texture* bouncerText = nullptr;
+	SDL_Texture* HUD = nullptr;
 
 	PhysBody* Physbackground = nullptr;
 	PhysBody* bouncer = nullptr;
