@@ -8,6 +8,9 @@
 #include "ModulePhysics.h"
 #include "ChainCoords.h"
 
+#define DOWN_OFFSET 800
+#define DOWN_CAMERA_OFFSET -412
+
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 	balls = background = bouncerText = HUD = NULL;
@@ -43,7 +46,7 @@ bool ModuleSceneIntro::Start()
 
 	// Create ball
 
-	ball = App->physics->CreateCircle(590, 384, 12);
+	ball = App->physics->CreateCircle(590, 384, 15);
 	ball->listener = this;
 
 	return ret;
@@ -77,13 +80,12 @@ update_status ModuleSceneIntro::Update()
 
 	int x, y;
 	ball->GetPosition(x, y);
-	int offset = 800;
 	rotate = ball->GetRotation();
-	App->renderer->camera.y = -y + 384;
+	App->renderer->camera.y = -y + (SCREEN_HEIGHT * 0.5);
 
-	if (y > offset)
+	if (y > DOWN_OFFSET)
 	{
-		App->renderer->camera.y = -412;
+		App->renderer->camera.y = DOWN_CAMERA_OFFSET;
 	}
 
 	
