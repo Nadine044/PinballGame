@@ -77,13 +77,13 @@ update_status ModuleSceneIntro::Update()
 
 	int x, y;
 	ball->GetPosition(x, y);
-	int offset = 768;
+	int offset = 800;
 	rotate = ball->GetRotation();
 	App->renderer->camera.y = -y + 384;
 
 	if (y > offset)
 	{
-		App->renderer->camera.y = -384;
+		App->renderer->camera.y = -412;
 	}
 
 	
