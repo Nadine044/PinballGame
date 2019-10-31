@@ -8,6 +8,8 @@
 #include "ModulePhysics.h"
 #include "ChainCoords.h"
 
+#define UP_OFFSET 380
+#define UP_CAMERA_OFFSET 0
 #define DOWN_OFFSET 800
 #define DOWN_CAMERA_OFFSET -412
 
@@ -46,7 +48,7 @@ bool ModuleSceneIntro::Start()
 
 	// Create ball
 
-	ball = App->physics->CreateCircle(590, 384, 15);
+	ball = App->physics->CreateCircle(SCREEN_WIDTH * 0.5, 250, 15);
 	ball->listener = this;
 
 	return ret;
@@ -82,6 +84,12 @@ update_status ModuleSceneIntro::Update()
 	ball->GetPosition(x, y);
 	rotate = ball->GetRotation();
 	App->renderer->camera.y = -y + (SCREEN_HEIGHT * 0.5);
+
+
+	if (y < UP_OFFSET)
+	{
+		App->renderer->camera.y = UP_CAMERA_OFFSET;
+	}
 
 	if (y > DOWN_OFFSET)
 	{
