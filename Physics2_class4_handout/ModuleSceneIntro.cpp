@@ -43,7 +43,7 @@ bool ModuleSceneIntro::Start()
 	Physbackground->body->SetType(b2_staticBody);
 
 	// Create colliders bouncer
-	bouncer = App->physics->CreateBouncer(590, 1180, 22);
+	bouncer = App->physics->CreateBouncer((SCREEN_WIDTH * 0.5) + 14.5, 500 + 90.5, 29, 181);
 	bouncer->listener = this;
 
 	// Create ball
@@ -102,6 +102,7 @@ update_status ModuleSceneIntro::Update()
 	App->renderer->Blit(background, 0, 0);
 	App->renderer->Blit(HUD, App->renderer->camera.x * (-1), App->renderer->camera.y * (-1));
 	App->renderer->Blit(balls, x, y, NULL, 1.0f, rotate, 16, 16);
+	App->renderer->Blit(bouncerText, SCREEN_WIDTH * 0.5 /*PUT A BOUNCER POS TO UPDATE THE TEXTURE TOO :)*/, 500, NULL);
 
 	return UPDATE_CONTINUE;
 }
