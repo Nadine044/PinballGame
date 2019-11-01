@@ -3,6 +3,7 @@
 #include "ModuleInput.h"
 #include "ModuleRender.h"
 #include "ModulePhysics.h"
+#include "ModuleSceneIntro.h"
 #include "p2Point.h"
 #include "math.h"
 
@@ -432,4 +433,27 @@ void ModulePhysics::BeginContact(b2Contact* contact)
 
 	if(physB && physB->listener != NULL)
 		physB->listener->OnCollision(physB, physA);
+}
+
+PhysBody *ModulePhysics::CreateLauncher(int x, int y, int width, int height, b2PrismaticJoint* joint, SDL_Texture* tex)
+{
+	PhysBody* fixed_launcher = App->physics->CreateRectangleSensor(x, y, width, height, 0);
+	PhysBody* launcher = App->physics->CreateRectangle(x, y, width, height);
+
+	b2PrismaticJointDef joint_def;
+	joint_def.bodyA = launcher->body;
+	joint_def.bodyB = fixed_launcher->body;
+	joint_def.localAxisA.Set(0, 1);
+	joint_def.localAnchorA.Set(0, 0);
+	joint_def.localAnchorB.Set(0, 0);
+	joint_def.enableLimit = true;
+	joint_def.upperTranslation = 0;
+	joint_def.lowerTranslation = -1; //-1
+	joint_def.enableMotor = true;
+	joint_def.maxMotorForce = 800.0f;
+	joint_def.motorSpeed = 0.0f;
+
+	App->scene_intro->launcher_joint = (b2PrismaticJoint*)world->CreateJoint(&joint_def);
+
+	return launcher;
 }

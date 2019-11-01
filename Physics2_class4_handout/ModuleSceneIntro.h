@@ -5,6 +5,7 @@
 #include "Globals.h"
 
 class PhysBody;
+class b2PrismaticJoint;
 
 class ModuleSceneIntro : public Module
 {
@@ -17,7 +18,6 @@ public:
 	bool CleanUp();
 	void OnCollision(PhysBody* bodyA, PhysBody* bodyB);
 	void FollowBall();
-	void pushBouncer(float speed);
 
 public:
 	p2List<PhysBody*> circles;
@@ -31,15 +31,17 @@ public:
 
 	SDL_Texture* balls = nullptr;
 	SDL_Texture* background = nullptr;
-	SDL_Texture* bouncerText = nullptr;
+	SDL_Texture* launcherText = nullptr;
 	SDL_Texture* HUD = nullptr;
 
 	PhysBody* Physbackground = nullptr;
-	PhysBody* bouncer = nullptr;
+	PhysBody* launcher = nullptr;
 	PhysBody* ball = nullptr;
 
 	float rotate;
-	float bouncerSpeed = -8;
+	float bouncerSpeed;
+
+	b2PrismaticJoint* launcher_joint = NULL;
 
 	uint bonus_fx = 0;
 };
