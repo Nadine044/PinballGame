@@ -47,7 +47,7 @@ public:
 	PhysBody* Physbackground = nullptr;
 	PhysBody* launcher = nullptr;
 
-	PhysBody * Physbottomleft = nullptr;
+	PhysBody* Physbottomleft = nullptr;
 	PhysBody* Physbottomright = nullptr;
 	PhysBody* Physrighttriangle = nullptr;
 	PhysBody* Physlefttriangle = nullptr;
@@ -93,7 +93,7 @@ public:
 	b2RevoluteJoint* flipper_r_joint = NULL;
 	b2RevoluteJoint* flipper_l_joint = NULL;
 
-	SDL_Rect flipper_rect;
+	SDL_Rect flipper_rect_l;
 	SDL_Rect flipper_rect_r;
 
 	// Fx

@@ -115,16 +115,16 @@ bool ModuleSceneIntro::Start()
 	ball->listener = this;
 
 	//Create flipper
-	int right_flipper2[8]
+	int left_flipper2[8]
 	{
 		0,  12,
 		0 ,-12,
-		-70,  7,
-		-70 ,-7
+		70,  7,
+		70 ,-7
 	};
-	flipper_rect_r = { 515, 1000, 110, 47 };
-	right_flipper = App->physics->CreateFlipper(b2Vec2(SCREEN_WIDTH * 0.5, 800), right_flipper2, 8, b2Vec2(325 + 353 + 80, 918 + 120), -40, 30, flipper_r_joint);
-
+	flipper_rect_l = { 0, 86, 92, 42 };
+	//0,86,92,42
+	left_flipper = App->physics->CreateFlipper(b2Vec2(SCREEN_WIDTH * 0.5, 600), left_flipper2, 8, b2Vec2(133 + 400, 918 + 110), -30, 40, flipper_l_joint);
 	return ret;
 }
 
@@ -137,7 +137,7 @@ bool ModuleSceneIntro::CleanUp()
 	App->textures->Unload(background);
 	App->textures->Unload(launcherText);
 	App->textures->Unload(HUD);
-	App->textures->Unload(rightFlipperText);
+	App->textures->Unload(leftFlipperText);
 
 	return true;
 }
@@ -151,9 +151,9 @@ update_status ModuleSceneIntro::Update()
 		ball->listener = this;
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_DOWN)
 	{
-		engageFlipper(right_flipper, 10.0f);
+		engageFlipper(left_flipper, -10.0f);
 		//	App->audio->PlayFx(flipper_fx);
 	}
 
@@ -216,8 +216,7 @@ update_status ModuleSceneIntro::Update()
 	App->renderer->Blit(HUD, App->renderer->camera.x * (-1), App->renderer->camera.y * (-1));
 	App->renderer->Blit(balls, x, y, NULL, 1.0f, rotate, 16, 16);
 	App->renderer->Blit(launcherText, 585, 999, NULL);
-	int RightFlipPosX = 215, RightFlipPosY = 1089;
-	App->renderer->Blit(rightFlipperText, RightFlipPosX, RightFlipPosY, &flipper_rect_r, 1.0f, right_flipper->GetRotation(), 30, 0);
+	App->renderer->Blit(leftFlipperText, SCREEN_WIDTH * 0.5 - 300, 800, &flipper_rect_l, 1.0f, left_flipper->GetRotation(), 30, 0);
 
 	return UPDATE_CONTINUE;
 }
