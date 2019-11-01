@@ -41,7 +41,57 @@ bool ModuleSceneIntro::Start()
 	// Create colliders map
 	Physbackground = App->physics->CreateChain(0, 0, backgroundChain, 144);
 	Physbackground->body->SetType(b2_staticBody);
+	Physbottomleft = App->physics->CreateChain(0, 0, Bottom_left, 18);
+	Physbottomleft->body->SetType(b2_staticBody);
+	Physbottomright = App->physics->CreateChain(0, 0, Bottom_right, 18);
+	Physbottomright->body->SetType(b2_staticBody);
+	Physrighttriangle = App->physics->CreateChain(0, 0, Right_triangle, 12);
+	Physrighttriangle->body->SetType(b2_staticBody);
+	Physlefttriangle = App->physics->CreateChain(0, 0, Left_triangle, 12);
+	Physlefttriangle->body->SetType(b2_staticBody);
+	Physlefttunnel = App->physics->CreateChain(0, 0, Left_tunnel, 86);
+	Physlefttunnel->body->SetType(b2_staticBody);
 
+	// Colliders interactive
+	Physyellowbird = App->physics->CreateRectangleSensor(186, 738, 74, 74);
+	Physgreenbird = App->physics->CreateRectangleSensor(374, 914, 74, 74);
+	Physredbird = App->physics->CreateRectangleSensor(462, 737, 74, 74);
+	Physbluebird = App->physics->CreateRectangleSensor(239, 915, 74, 74);
+	Physpinkbird = App->physics->CreateRectangleSensor(323, 705, 74, 74);
+	Physorangebird = App->physics->CreateRectangleSensor(307, 1039, 74, 74);
+	Physninja = App->physics->CreateRectangleSensor(86, 942, 74, 74);
+	Physgirl = App->physics->CreateRectangleSensor(522, 934, 74, 74);
+	Physsquare1 = App->physics->CreateRectangleSensor(349, 375, 70, 70);
+	Physsquare2 = App->physics->CreateRectangleSensor(481, 161, 70, 70);
+	Physactred1 = App->physics->CreateRectangleSensor(125, 630, 20, 20);
+	Physactred2 = App->physics->CreateRectangleSensor(104, 449, 20, 20);
+	Physactred3 = App->physics->CreateRectangleSensor(104, 389, 20, 20);
+	Physactred4 = App->physics->CreateRectangleSensor(121, 265, 20, 20);
+	Physactred5 = App->physics->CreateRectangleSensor(390, 69, 20, 20);
+	Physactred6 = App->physics->CreateRectangleSensor(576, 73, 20, 20);
+	Physactred7 = App->physics->CreateRectangleSensor(607, 348, 20, 20);
+	Physactred8 = App->physics->CreateRectangleSensor(607, 566, 20, 20);
+
+	// Colliders bumper
+	Physbumper1 = App->physics->CreateCircle(375, 567, 43);
+	Physbumper1->body->SetType(b2_staticBody);
+	Physbumper2 = App->physics->CreateCircle(537, 430, 43);
+	Physbumper2->body->SetType(b2_staticBody);
+	Physlittlebumper1 = App->physics->CreateCircle(542, 867, 15);
+	Physlittlebumper1->body->SetType(b2_staticBody);
+	Physlittlebumper2 = App->physics->CreateCircle(148, 339, 15);
+	Physlittlebumper2->body->SetType(b2_staticBody);
+	Physlittlebumper3 = App->physics->CreateCircle(303, 176, 15);
+	Physlittlebumper3->body->SetType(b2_staticBody);
+	Physlittlebumper4 = App->physics->CreateCircle(398, 165, 15);
+	Physlittlebumper4->body->SetType(b2_staticBody);
+	Physlittlebumper5 = App->physics->CreateCircle(477, 88, 15);
+	Physlittlebumper5->body->SetType(b2_staticBody);
+	Physlittlebumper6 = App->physics->CreateCircle(548, 165, 15);
+	Physlittlebumper6->body->SetType(b2_staticBody);
+	Physlittlebumper7 = App->physics->CreateCircle(586, 291, 15);
+	Physlittlebumper7->body->SetType(b2_staticBody);
+	
 	// Create colliders bouncer
 	bouncer = App->physics->CreateBouncer(590, 1180, 22);
 	bouncer->listener = this;

@@ -148,7 +148,7 @@ PhysBody* ModulePhysics::CreateRectangle(int x, int y, int width, int height)
 	return pbody;
 }
 
-PhysBody* ModulePhysics::CreateRectangleSensor(int x, int y, int width, int height, Module *listener)
+PhysBody* ModulePhysics::CreateRectangleSensor(int x, int y, int width, int height)//,Module *listener)
 {
 	b2BodyDef body;
 	body.type = b2_staticBody;
@@ -171,7 +171,7 @@ PhysBody* ModulePhysics::CreateRectangleSensor(int x, int y, int width, int heig
 	b->SetUserData(pbody);
 	pbody->width = width;
 	pbody->height = height;
-	pbody->listener = listener;
+	//pbody->listener = listener;
 
 	return pbody;
 }
