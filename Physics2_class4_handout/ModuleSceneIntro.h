@@ -20,6 +20,7 @@ public:
 	void CheckBlit();
 	void ScoreBlit();
 	void BallsBlit();
+	void BonusBlit();
 
 public:
 	p2List<PhysBody*> circles;
@@ -63,6 +64,7 @@ public:
 	PhysBody* Physrighttriangle = nullptr;
 	PhysBody* Physlefttriangle = nullptr;
 	PhysBody* Physlefttunnel = nullptr;
+	PhysBody* Physlefttunnelbonus = nullptr;
 
 	// Colliders interactive
 	PhysBody* Physyellowbird = nullptr;
@@ -94,6 +96,9 @@ public:
 	PhysBody* Physlittlebumper5 = nullptr;
 	PhysBody* Physlittlebumper6 = nullptr;
 	PhysBody* Physlittlebumper7 = nullptr;
+
+	// Collider dead
+	PhysBody* Physdead = nullptr;
 
 	PhysBody* ball = nullptr;
 
@@ -133,12 +138,23 @@ public:
 	bool littlebumper6_on = false;
 	bool littlebumper7_on = false;
 
+	// Tunnel bonus
+	bool lefttunnelbonus_on = false;
+
+	// Dead
+	bool dead_on = false;
+
 	// Score
 	int font_score = -1;
 	char score_text[10];
 	uint score = 0;
+	bool addscore = false;
 
 	// Balls
 	char score_balls[10];
 	uint balls_number = 3;
+
+	// Bonus
+	bool bonusbird = false;
+	bool bonussquare = false;
 };

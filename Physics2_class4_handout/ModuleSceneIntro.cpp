@@ -76,6 +76,7 @@ bool ModuleSceneIntro::Start()
 	Physlefttriangle->body->SetType(b2_staticBody);
 	Physlefttunnel = App->physics->CreateChain(0, 0, Left_tunnel, 70);
 	Physlefttunnel->body->SetType(b2_staticBody);
+	Physlefttunnelbonus = App->physics->CreateRectangleSensor(100, 746, 50, 20);
 
 	// Colliders interactive
 	Physyellowbird = App->physics->CreateRectangleSensor(186, 738, 74, 74);
@@ -116,13 +117,15 @@ bool ModuleSceneIntro::Start()
 	Physlittlebumper6->body->SetType(b2_staticBody);
 	Physlittlebumper7 = App->physics->CreateCircle(586, 291, 15);
 	Physlittlebumper7->body->SetType(b2_staticBody);
+
+	// Collider dead
+	Physdead = App->physics->CreateRectangleSensor(306, 1175, 250, 10);
 	
 	// Create colliders bouncer
 	launcher = App->physics->CreateLauncher(585 + 14.5, 999 + 90.5 - 15.5, 29, 150, launcher_joint);
 	launcher->listener = this;
 
 	// Create ball
-
 	ball = App->physics->CreateCircle(585, 800, 14);
 	ball->listener = this;
 
@@ -206,6 +209,11 @@ update_status ModuleSceneIntro::Update()
 
 	// Check score and balls for blit
 	ScoreBlit();
+
+	// Check bonus points
+	BonusBlit();
+
+	addscore = false;
 	BallsBlit();
 
 	App->renderer->Blit(balls, x, y, NULL, 1.0f, rotate, 16, 16);
@@ -222,31 +230,37 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	if (bodyB == Physyellowbird)
 	{
 		yellowbird_on = true;
+		addscore = true;
 		//App->audio->PlayFx(bonus_fx);
 	}
 	if (bodyB == Physgreenbird)
 	{
 		greenbird_on = true;
+		addscore = true;
 		//App->audio->PlayFx(bonus_fx);
 	}
 	if (bodyB == Physorangebird)
 	{
 		orangebird_on = true;
+		addscore = true;
 		//App->audio->PlayFx(bonus_fx);
 	}
 	if (bodyB == Physbluebird)
 	{
 		bluebird_on = true;
+		addscore = true;
 		//App->audio->PlayFx(bonus_fx);
 	}
 	if (bodyB == Physpinkbird)
 	{
 		pinkbird_on = true;
+		addscore = true;
 		//App->audio->PlayFx(bonus_fx);
 	}
 	if (bodyB == Physredbird)
 	{
 		redbird_on = true;
+		addscore = true;
 		//App->audio->PlayFx(bonus_fx);
 	}
 
@@ -254,11 +268,13 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	if (bodyB == Physninja)
 	{
 		ninja_on = true;
+		addscore = true;
 		//App->audio->PlayFx(bonus_fx);
 	}
 	if (bodyB == Physgirl)
 	{
 		girl_on = true;
+		addscore = true;
 		//App->audio->PlayFx(bonus_fx);
 	}
 
@@ -266,11 +282,13 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	if (bodyB == Physsquare1)
 	{
 		square1_on = true;
+		addscore = true;
 		//App->audio->PlayFx(bonus_fx);
 	}
 	if (bodyB == Physsquare2)
 	{
 		square2_on = true;
+		addscore = true;
 		//App->audio->PlayFx(bonus_fx);
 	}
 
@@ -278,41 +296,49 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	if (bodyB == Physactred1)
 	{
 		actred1_on = true;
+		addscore = true;
 		//App->audio->PlayFx(bonus_fx);
 	}
 	if (bodyB == Physactred2)
 	{
 		actred2_on = true;
+		addscore = true;
 		//App->audio->PlayFx(bonus_fx);
 	}
 	if (bodyB == Physactred3)
 	{
 		actred3_on = true;
+		addscore = true;
 		//App->audio->PlayFx(bonus_fx);
 	}
 	if (bodyB == Physactred4)
 	{
 		actred4_on = true;
+		addscore = true;
 		//App->audio->PlayFx(bonus_fx);
 	}
 	if (bodyB == Physactred5)
 	{
 		actred5_on = true;
+		addscore = true;
 		//App->audio->PlayFx(bonus_fx);
 	}
 	if (bodyB == Physactred6)
 	{
 		actred6_on = true;
+		addscore = true;
 		//App->audio->PlayFx(bonus_fx);
 	}
 	if (bodyB == Physactred7)
 	{
 		actred7_on = true;
+		addscore = true;
 		//App->audio->PlayFx(bonus_fx);
 	}
 	if (bodyB == Physactred8)
 	{
 		actred8_on = true;
+		addscore = true;
 		//App->audio->PlayFx(bonus_fx);
 	}
 
@@ -320,6 +346,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	if (bodyB == Physbumper1)
 	{
 		bumper1_on = true;
+		addscore = true;
 		//App->audio->PlayFx(bonus_fx);
 	}
 	else
@@ -329,6 +356,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	if (bodyB == Physbumper2)
 	{
 		bumper2_on = true;
+		addscore = true;
 		//App->audio->PlayFx(bonus_fx);
 	}
 	else
@@ -340,6 +368,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	if (bodyB == Physlittlebumper1)
 	{
 		littlebumper1_on = true;
+		addscore = true;
 		//App->audio->PlayFx(bonus_fx);
 	}
 	else
@@ -349,6 +378,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	if (bodyB == Physlittlebumper2)
 	{
 		littlebumper2_on = true;
+		addscore = true;
 		//App->audio->PlayFx(bonus_fx);
 	}
 	else
@@ -358,6 +388,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	if (bodyB == Physlittlebumper3)
 	{
 		littlebumper3_on = true;
+		addscore = true;
 		//App->audio->PlayFx(bonus_fx);
 	}
 	else
@@ -367,6 +398,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	if (bodyB == Physlittlebumper4)
 	{
 		littlebumper4_on = true;
+		addscore = true;
 		//App->audio->PlayFx(bonus_fx);
 	}
 	else
@@ -376,6 +408,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	if (bodyB == Physlittlebumper5)
 	{
 		littlebumper5_on = true;
+		addscore = true;
 		//App->audio->PlayFx(bonus_fx);
 	}
 	else
@@ -385,6 +418,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	if (bodyB == Physlittlebumper6)
 	{
 		littlebumper6_on = true;
+		addscore = true;
 		//App->audio->PlayFx(bonus_fx);
 	}
 	else
@@ -394,11 +428,26 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	if (bodyB == Physlittlebumper7)
 	{
 		littlebumper7_on = true;
+		addscore = true;
 		//App->audio->PlayFx(bonus_fx);
 	}
 	else
 	{
 		littlebumper7_on = false;
+	}
+
+	// Bonus tunnel
+	if (bodyB == Physlefttunnelbonus)
+	{
+		lefttunnelbonus_on = true;
+		//App->audio->PlayFx(bonus_fx);
+	}
+
+	// Dead
+	if (bodyB == Physdead)
+	{
+		dead_on = true;
+		//App->audio->PlayFx(bonus_fx);
 	}
 }
 
@@ -521,13 +570,28 @@ void ModuleSceneIntro::CheckBlit()
 	{
 		App->renderer->Blit(littlebumper, 573, 279);
 	}
+	
+	// Check dead
+	if (dead_on == true)
+	{
+		balls_number--;
+		if (balls_number < 0)
+		{
+
+		}
+		dead_on = false;
+	}
 }
 
 void ModuleSceneIntro::ScoreBlit()
 {
 	sprintf_s(score_text, 10, "%d", score);
 
-	App->fonts->BlitText(60, 25, font_score, score_text);
+	if (addscore == true)
+	{
+		score += 100;
+	}
+	App->fonts->BlitText(5, 25, font_score, score_text);
 }
 
 void ModuleSceneIntro::BallsBlit()
@@ -535,4 +599,37 @@ void ModuleSceneIntro::BallsBlit()
 	sprintf_s(score_balls, 10, "%d", balls_number);
 
 	App->fonts->BlitText(555, 25, font_score, score_balls);
+}
+
+void ModuleSceneIntro::BonusBlit()
+{
+	
+
+	
+
+	
+
+	// meow meow happy fight bonus +20000 (ninja and girl)
+
+	// Pyo blocs bonus +15000 (all birds)
+	if (bonusbird == false && yellowbird_on == true && greenbird_on == true && orangebird_on == true && bluebird_on == true && pinkbird_on == true && redbird_on == true)
+	{
+		score += 15000;
+		bonusbird = true;
+	}
+
+	// Big pixel bonus +500000 (squares)
+	if (bonussquare == false && square1_on == true && square2_on == true)
+	{
+		score += 500000;
+		bonussquare = true;
+	}
+
+	// loop bonus +50000 (left tunnel)
+	if (lefttunnelbonus_on == true)
+	{
+		score += 50000;
+		lefttunnelbonus_on = false;
+	}
+	
 }
