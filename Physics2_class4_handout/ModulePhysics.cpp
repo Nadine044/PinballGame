@@ -437,7 +437,7 @@ void ModulePhysics::BeginContact(b2Contact* contact)
 
 PhysBody *ModulePhysics::CreateLauncher(int x, int y, int width, int height, b2PrismaticJoint* joint, SDL_Texture* tex)
 {
-	PhysBody* fixed_launcher = App->physics->CreateRectangleSensor(x, y, width, height, 0);
+	PhysBody* fixed_launcher = App->physics->CreateRectangleSensor(x, y, width, height);
 	PhysBody* launcher = App->physics->CreateRectangle(x, y, width, height);
 
 	b2PrismaticJointDef joint_def;
