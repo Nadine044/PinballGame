@@ -58,7 +58,7 @@ bool ModuleSceneIntro::Start()
 	littlebumper = App->textures->Load("assets/Interactive/red_bumper_on_.png");
 
 	// Load audio and fx
-	bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
+	hit_fx = App->audio->LoadFx("pinball/bonus.wav");
 
 	// Load number for score
 	font_score = App->fonts->Load("assets/HUD/numbers.png", "1234567890", 1);
@@ -128,6 +128,9 @@ bool ModuleSceneIntro::Start()
 	// Create ball
 	ball = App->physics->CreateCircle(585, 800, 14);
 	ball->listener = this;
+
+	// Play music
+	App->audio->PlayMusic("assets/Sounds/Music/pinball_music.ogg");
 
 	return ret;
 }
@@ -224,7 +227,7 @@ update_status ModuleSceneIntro::Update()
 
 void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 {
-	App->audio->PlayFx(bonus_fx);
+	App->audio->PlayFx(hit_fx);
 
 	// Birds
 	if (bodyB == Physyellowbird)
@@ -603,14 +606,6 @@ void ModuleSceneIntro::BallsBlit()
 
 void ModuleSceneIntro::BonusBlit()
 {
-	
-
-	
-
-	
-
-	// meow meow happy fight bonus +20000 (ninja and girl)
-
 	// Pyo blocs bonus +15000 (all birds)
 	if (bonusbird == false && yellowbird_on == true && greenbird_on == true && orangebird_on == true && bluebird_on == true && pinkbird_on == true && redbird_on == true)
 	{
@@ -632,4 +627,10 @@ void ModuleSceneIntro::BonusBlit()
 		lefttunnelbonus_on = false;
 	}
 	
+	// meow meow happy fight bonus +20000 (ninja and girl)
+	if (bonusninjagirl == false && ninja_on == true && girl_on == true)
+	{
+		score += 20000;
+		bonusninjagirl = true;
+	}
 }

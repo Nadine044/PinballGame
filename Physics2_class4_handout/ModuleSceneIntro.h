@@ -104,8 +104,19 @@ public:
 
 	b2PrismaticJoint* launcher_joint = NULL;
 
+	// Music
+	uint music = 0;
+
 	// Fx
-	uint bonus_fx = 0;
+	uint hit_fx = 0;
+	uint yellowbird_fx = 0;
+	uint greenbird_fx = 0;
+	uint orangebird_fx = 0;
+	uint bluebird_fx = 0;
+	uint pinkbird_fx = 0;
+	uint redbird_fx = 0;
+	uint ninja_fx = 0;
+	uint girl_fx = 0;
 
 	// Make interactive appear
 	bool yellowbird_on = false;
@@ -157,4 +168,11 @@ public:
 	// Bonus
 	bool bonusbird = false;
 	bool bonussquare = false;
+	bool bonusninjagirl = false;
 };
+// vermell nena
+// groc nena
+// taronja ocell
+// blau nena
+// verd ocell
+//rosa ocell
