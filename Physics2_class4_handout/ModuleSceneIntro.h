@@ -17,6 +17,7 @@ public:
 	update_status Update();
 	bool CleanUp();
 	void OnCollision(PhysBody* bodyA, PhysBody* bodyB);
+	void CheckBlit();
 
 public:
 	p2List<PhysBody*> circles;
@@ -35,7 +36,18 @@ public:
 	SDL_Texture* HUD = nullptr;
 
 	// Load interactive textures
+	SDL_Texture* yellowbird = nullptr;
+	SDL_Texture* greenbird = nullptr;
 	SDL_Texture* orangebird = nullptr;
+	SDL_Texture* bluebird = nullptr;
+	SDL_Texture* pinkbird = nullptr;
+	SDL_Texture* redbird = nullptr;
+	SDL_Texture* ninja = nullptr;
+	SDL_Texture* girl = nullptr;
+	SDL_Texture* square = nullptr;
+	SDL_Texture* actred = nullptr;
+	SDL_Texture* bumper = nullptr;
+	SDL_Texture* littlebumper = nullptr;
 
 	float rotate;
 	float bouncerSpeed;
@@ -89,5 +101,33 @@ public:
 	uint bonus_fx = 0;
 
 	// Make interactive appear
+	bool yellowbird_on = false;
+	bool greenbird_on = false;
 	bool orangebird_on = false;
+	bool bluebird_on = false;
+	bool pinkbird_on = false;
+	bool redbird_on = false;
+	bool ninja_on = false;
+	bool girl_on = false;
+	bool square1_on = false;
+	bool square2_on = false;
+	bool actred1_on = false;
+	bool actred2_on = false;
+	bool actred3_on = false;
+	bool actred4_on = false;
+	bool actred5_on = false;
+	bool actred6_on = false;
+	bool actred7_on = false;
+	bool actred8_on = false;
+	
+	// Bumpers
+	bool bumper1_on = false;
+	bool bumper2_on = false;
+	bool littlebumper1_on = false;
+	bool littlebumper2_on = false;
+	bool littlebumper3_on = false;
+	bool littlebumper4_on = false;
+	bool littlebumper5_on = false;
+	bool littlebumper6_on = false;
+	bool littlebumper7_on = false;
 };

@@ -43,7 +43,18 @@ bool ModuleSceneIntro::Start()
 	HUD = App->textures->Load("assets/HUD/HUD.png");
 
 	// Load interactive textures
+	yellowbird = App->textures->Load("assets/Interactive/yellow_bird_on_.png");
+	greenbird = App->textures->Load("assets/Interactive/green_bird_on_.png");
 	orangebird = App->textures->Load("assets/Interactive/orange_bird_on_.png");
+	bluebird = App->textures->Load("assets/Interactive/blue_bird_on_.png");
+	pinkbird = App->textures->Load("assets/Interactive/pink_bird_on_.png");
+	redbird = App->textures->Load("assets/Interactive/red_bird_on_.png");
+	ninja = App->textures->Load("assets/Interactive/ninja_on_.png");
+	girl = App->textures->Load("assets/Interactive/girl_on_.png");
+	square = App->textures->Load("assets/Interactive/green_square_on_.png");
+	actred = App->textures->Load("assets/Interactive/red_ball_on_.png");
+	bumper = App->textures->Load("assets/Interactive/green_bumper_on_.png");
+	littlebumper = App->textures->Load("assets/Interactive/red_bumper_on_.png");
 
 	// Load audio and fx
 	bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
@@ -181,10 +192,12 @@ update_status ModuleSceneIntro::Update()
 
 	// Blit to screen
 	App->renderer->Blit(background, 0, 0);
-	if (orangebird_on == true)
-	{
-		App->renderer->Blit(orangebird, 307, 1039);
-	}
+	
+	// Check all interactive blit
+	CheckBlit();
+	
+	// if all birds activated +15000
+	
 	App->renderer->Blit(HUD, App->renderer->camera.x * (-1), App->renderer->camera.y * (-1));
 	App->renderer->Blit(balls, x, y, NULL, 1.0f, rotate, 16, 16);
 	App->renderer->Blit(launcherText, 585, 999, NULL);
@@ -194,25 +207,273 @@ update_status ModuleSceneIntro::Update()
 
 void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 {
-	//int x, y;
-
 	App->audio->PlayFx(bonus_fx);
 
+	// Birds
+	if (bodyB == Physyellowbird)
+	{
+		yellowbird_on = true;
+		//App->audio->PlayFx(bonus_fx);
+	}
+	if (bodyB == Physgreenbird)
+	{
+		greenbird_on = true;
+		//App->audio->PlayFx(bonus_fx);
+	}
 	if (bodyB == Physorangebird)
 	{
 		orangebird_on = true;
-		App->audio->PlayFx(bonus_fx);
+		//App->audio->PlayFx(bonus_fx);
 	}
-	/*
-	if(bodyA)
+	if (bodyB == Physbluebird)
 	{
-		bodyA->GetPosition(x, y);
-		App->renderer->DrawCircle(x, y, 50, 100, 100, 100);
+		bluebird_on = true;
+		//App->audio->PlayFx(bonus_fx);
+	}
+	if (bodyB == Physpinkbird)
+	{
+		pinkbird_on = true;
+		//App->audio->PlayFx(bonus_fx);
+	}
+	if (bodyB == Physredbird)
+	{
+		redbird_on = true;
+		//App->audio->PlayFx(bonus_fx);
 	}
 
-	if(bodyB)
+	// Ninja and girl
+	if (bodyB == Physninja)
 	{
-		bodyB->GetPosition(x, y);
-		App->renderer->DrawCircle(x, y, 50, 100, 100, 100);
-	}*/
+		ninja_on = true;
+		//App->audio->PlayFx(bonus_fx);
+	}
+	if (bodyB == Physgirl)
+	{
+		girl_on = true;
+		//App->audio->PlayFx(bonus_fx);
+	}
+
+	// Squares
+	if (bodyB == Physsquare1)
+	{
+		square1_on = true;
+		//App->audio->PlayFx(bonus_fx);
+	}
+	if (bodyB == Physsquare2)
+	{
+		square2_on = true;
+		//App->audio->PlayFx(bonus_fx);
+	}
+
+	// Active red
+	if (bodyB == Physactred1)
+	{
+		actred1_on = true;
+		//App->audio->PlayFx(bonus_fx);
+	}
+	if (bodyB == Physactred2)
+	{
+		actred2_on = true;
+		//App->audio->PlayFx(bonus_fx);
+	}
+	if (bodyB == Physactred3)
+	{
+		actred3_on = true;
+		//App->audio->PlayFx(bonus_fx);
+	}
+	if (bodyB == Physactred4)
+	{
+		actred4_on = true;
+		//App->audio->PlayFx(bonus_fx);
+	}
+	if (bodyB == Physactred5)
+	{
+		actred5_on = true;
+		//App->audio->PlayFx(bonus_fx);
+	}
+	if (bodyB == Physactred6)
+	{
+		actred6_on = true;
+		//App->audio->PlayFx(bonus_fx);
+	}
+	if (bodyB == Physactred7)
+	{
+		actred7_on = true;
+		//App->audio->PlayFx(bonus_fx);
+	}
+	if (bodyB == Physactred8)
+	{
+		actred8_on = true;
+		//App->audio->PlayFx(bonus_fx);
+	}
+
+	// Check bumpers
+	if (bodyB == Physbumper1)
+	{
+		bumper1_on = true;
+		//App->audio->PlayFx(bonus_fx);
+	}
+	if (bodyB == Physbumper2)
+	{
+		bumper2_on = true;
+		//App->audio->PlayFx(bonus_fx);
+	}
+
+	// Check littlebumpers
+	if (bodyB == Physlittlebumper1)
+	{
+		littlebumper1_on = true;
+		//App->audio->PlayFx(bonus_fx);
+	}
+	if (bodyB == Physlittlebumper2)
+	{
+		littlebumper2_on = true;
+		//App->audio->PlayFx(bonus_fx);
+	}
+	if (bodyB == Physlittlebumper3)
+	{
+		littlebumper3_on = true;
+		//App->audio->PlayFx(bonus_fx);
+	}
+	if (bodyB == Physlittlebumper4)
+	{
+		littlebumper4_on = true;
+		//App->audio->PlayFx(bonus_fx);
+	}
+	if (bodyB == Physlittlebumper5)
+	{
+		littlebumper5_on = true;
+		//App->audio->PlayFx(bonus_fx);
+	}
+	if (bodyB == Physlittlebumper6)
+	{
+		littlebumper6_on = true;
+		//App->audio->PlayFx(bonus_fx);
+	}
+	if (bodyB == Physlittlebumper7)
+	{
+		littlebumper7_on = true;
+		//App->audio->PlayFx(bonus_fx);
+	}
+}
+
+void ModuleSceneIntro::CheckBlit()
+{
+	// Check bird on
+	if (yellowbird_on == true)
+	{
+		App->renderer->Blit(yellowbird, 144, 701);
+	}
+	if (greenbird_on == true)
+	{
+		App->renderer->Blit(greenbird, 334, 879);
+	}
+	if (orangebird_on == true)
+	{
+		App->renderer->Blit(orangebird, 266, 1004);
+	}
+	if (bluebird_on == true)
+	{
+		App->renderer->Blit(bluebird, 198, 879);
+	}
+	if (pinkbird_on == true)
+	{
+		App->renderer->Blit(pinkbird, 281, 670);
+	}
+	if (redbird_on == true)
+	{
+		App->renderer->Blit(redbird, 421, 701);
+	}
+
+	// Check ninja and girl on
+	if (ninja_on == true)
+	{
+		App->renderer->Blit(ninja, 46, 890);
+	}
+	if (girl_on == true)
+	{
+		App->renderer->Blit(girl, 485, 886);
+	}
+
+	// Check squares on
+	if (square1_on == true)
+	{
+		App->renderer->Blit(square, 311, 343);
+	}
+	if (square2_on == true)
+	{
+		App->renderer->Blit(square, 447, 129);
+	}
+
+	// Check red active on
+	if (actred1_on == true)
+	{
+		App->renderer->Blit(actred, 133, 641);
+	}
+	if (actred2_on == true)
+	{
+		App->renderer->Blit(actred, 119, 422);
+	}
+	if (actred3_on == true)
+	{
+		App->renderer->Blit(actred, 119, 361);
+	}
+	if (actred4_on == true)
+	{
+		App->renderer->Blit(actred, 139, 263);
+	}
+	if (actred5_on == true)
+	{
+		App->renderer->Blit(actred, 394, 77);
+	}
+	if (actred6_on == true)
+	{
+		App->renderer->Blit(actred, 510, 77);
+	}
+	if (actred7_on == true)
+	{
+		App->renderer->Blit(actred, 534, 323);
+	}
+	if (actred8_on == true)
+	{
+		App->renderer->Blit(actred, 535, 545);
+	}
+
+	// Check bumper on
+	if (bumper1_on == true)
+	{
+		App->renderer->Blit(bumper, 326, 516);
+	}
+	if (bumper2_on == true)
+	{
+		App->renderer->Blit(bumper, 487, 380);
+	}
+	if (littlebumper1_on == true)
+	{
+		App->renderer->Blit(littlebumper, 529, 855);
+	}
+	if (littlebumper2_on == true)
+	{
+		App->renderer->Blit(littlebumper, 135, 328);
+	}
+	if (littlebumper3_on == true)
+	{
+		App->renderer->Blit(littlebumper, 290, 164);
+	}
+	if (littlebumper4_on == true)
+	{
+		App->renderer->Blit(littlebumper, 385, 153);
+	}
+	if (littlebumper5_on == true)
+	{
+		App->renderer->Blit(littlebumper, 464, 76);
+	}
+	if (littlebumper6_on == true)
+	{
+		App->renderer->Blit(littlebumper, 535, 153);
+	}
+	if (littlebumper7_on == true)
+	{
+		App->renderer->Blit(littlebumper, 573, 279);
+	}
 }
