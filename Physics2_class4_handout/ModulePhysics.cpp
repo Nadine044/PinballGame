@@ -78,7 +78,7 @@ update_status ModulePhysics::PreUpdate()
 PhysBody* ModulePhysics::CreateBouncer(float x, float y, int width, int height)
 {
 	b2BodyDef body;
-	body.type = b2_staticBody;
+	body.type = b2_kinematicBody;
 	body.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
 
 	b2Body* b = world->CreateBody(&body);

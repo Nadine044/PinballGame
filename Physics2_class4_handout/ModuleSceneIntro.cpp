@@ -95,8 +95,17 @@ update_status ModuleSceneIntro::Update()
 	{
 		App->renderer->camera.y = DOWN_CAMERA_OFFSET;
 	}
-
 	
+	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT)
+	{
+		int bouncerPosX, bouncerPosY;
+		bouncer->GetPosition(bouncerPosX, bouncerPosY);
+		pushBouncer(bouncerSpeed);
+	}
+
+	bouncerSpeed = 0;
+
+	//vector velocity 0
 
 	// Blit to screen
 	App->renderer->Blit(background, 0, 0);
@@ -125,6 +134,14 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 		bodyB->GetPosition(x, y);
 		App->renderer->DrawCircle(x, y, 50, 100, 100, 100);
 	}*/
+}
+
+void ModuleSceneIntro::pushBouncer(float speed)
+{
+	b2Vec2 pos = { SCREEN_WIDTH * 0.5, 600 };
+	b2Vec2 vel = { 0, speed };
+	//bouncer->body->SetTransform(pos, 0);
+	bouncer->body->SetLinearVelocity(vel);
 }
 
 void ModuleSceneIntro::FollowBall()

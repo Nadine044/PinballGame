@@ -17,6 +17,7 @@ public:
 	bool CleanUp();
 	void OnCollision(PhysBody* bodyA, PhysBody* bodyB);
 	void FollowBall();
+	void pushBouncer(float speed);
 
 public:
 	p2List<PhysBody*> circles;
@@ -38,6 +39,7 @@ public:
 	PhysBody* ball = nullptr;
 
 	float rotate;
+	float bouncerSpeed = 2;
 
 	uint bonus_fx = 0;
 };
