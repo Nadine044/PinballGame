@@ -31,20 +31,20 @@ bool ModuleSceneIntro::Start()
 	// Initialize interactive colliders
 	orangebird_on = false;
 
+	//Set camera position
 	App->renderer->camera.x = 0;
 	App->renderer->camera.y = 0;
 
+	//Set to 0 launcher speed force
 	bouncerSpeed = 0.0f;
-
-	flipper_rect_r = { 515, 1000, 110, 47 };
 
 	// Load textures
 	balls = App->textures->Load("assets/Player_control/ball.png"); 
 	background = App->textures->Load("assets/Background/Background_finished.png");
 	launcherText = App->textures->Load("assets/Player_control/bouncer.png");
 	HUD = App->textures->Load("assets/HUD/HUD.png");
-	rightFlipperText = App->textures->Load("assets/Player_control/flipper1");
-	leftFlipperText = App->textures->Load("assets/Player_control/flipper1"); //flip texture
+	rightFlipperText = App->textures->Load("assets/Player_control/flipper1.png");
+	leftFlipperText = App->textures->Load("assets/Player_control/flipper1.png"); //flip texture
 
 	// Load interactive textures
 	orangebird = App->textures->Load("assets/Interactive/orange_bird_on_.png");
@@ -111,9 +111,10 @@ bool ModuleSceneIntro::Start()
 	launcher->listener = this;
 
 	// Create ball
-	ball = App->physics->CreateCircle(585, 800, 14);
+	ball = App->physics->CreateCircle(585, 800, 13);
 	ball->listener = this;
 
+	//Create flipper
 	int right_flipper2[8]
 	{
 		0,  12,
@@ -121,10 +122,8 @@ bool ModuleSceneIntro::Start()
 		-70,  7,
 		-70 ,-7
 	};
-
-	//Create flipper
-	b2Vec2 flipPos = { 500, 900 };
-	right_flipper = App->physics->CreateFlipper(b2Vec2(293 + 353 + 80, 918 + 120), right_flipper2, 8, b2Vec2(325 + 353 + 80, 918 + 120), -40, 30, flipper_r_joint);
+	flipper_rect_r = { 515, 1000, 110, 47 };
+	right_flipper = App->physics->CreateFlipper(b2Vec2(SCREEN_WIDTH * 0.5, 800), right_flipper2, 8, b2Vec2(325 + 353 + 80, 918 + 120), -40, 30, flipper_r_joint);
 
 	return ret;
 }
@@ -138,6 +137,7 @@ bool ModuleSceneIntro::CleanUp()
 	App->textures->Unload(background);
 	App->textures->Unload(launcherText);
 	App->textures->Unload(HUD);
+	App->textures->Unload(rightFlipperText);
 
 	return true;
 }
@@ -218,8 +218,6 @@ update_status ModuleSceneIntro::Update()
 	App->renderer->Blit(launcherText, 585, 999, NULL);
 	int RightFlipPosX = 215, RightFlipPosY = 1089;
 	App->renderer->Blit(rightFlipperText, RightFlipPosX, RightFlipPosY, &flipper_rect_r, 1.0f, right_flipper->GetRotation(), 30, 0);
-
-
 
 	return UPDATE_CONTINUE;
 }
