@@ -70,7 +70,7 @@ bool ModuleSceneIntro::Start()
 	Physrighttriangle->body->SetType(b2_staticBody);
 	Physlefttriangle = App->physics->CreateChain(0, 0, Left_triangle, 12);
 	Physlefttriangle->body->SetType(b2_staticBody);
-	Physlefttunnel = App->physics->CreateChain(0, 0, Left_tunnel, 86);
+	Physlefttunnel = App->physics->CreateChain(0, 0, Left_tunnel, 70);
 	Physlefttunnel->body->SetType(b2_staticBody);
 
 	// Colliders interactive
@@ -313,10 +313,18 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 		bumper1_on = true;
 		//App->audio->PlayFx(bonus_fx);
 	}
+	else
+	{
+		bumper1_on = false;
+	}
 	if (bodyB == Physbumper2)
 	{
 		bumper2_on = true;
 		//App->audio->PlayFx(bonus_fx);
+	}
+	else
+	{
+		bumper2_on = false;
 	}
 
 	// Check littlebumpers
@@ -325,35 +333,63 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 		littlebumper1_on = true;
 		//App->audio->PlayFx(bonus_fx);
 	}
+	else
+	{
+		littlebumper1_on = false;
+	}
 	if (bodyB == Physlittlebumper2)
 	{
 		littlebumper2_on = true;
 		//App->audio->PlayFx(bonus_fx);
+	}
+	else
+	{
+		littlebumper2_on = false;
 	}
 	if (bodyB == Physlittlebumper3)
 	{
 		littlebumper3_on = true;
 		//App->audio->PlayFx(bonus_fx);
 	}
+	else
+	{
+		littlebumper3_on = false;
+	}
 	if (bodyB == Physlittlebumper4)
 	{
 		littlebumper4_on = true;
 		//App->audio->PlayFx(bonus_fx);
+	}
+	else
+	{
+		littlebumper4_on = false;
 	}
 	if (bodyB == Physlittlebumper5)
 	{
 		littlebumper5_on = true;
 		//App->audio->PlayFx(bonus_fx);
 	}
+	else
+	{
+		littlebumper5_on = false;
+	}
 	if (bodyB == Physlittlebumper6)
 	{
 		littlebumper6_on = true;
 		//App->audio->PlayFx(bonus_fx);
 	}
+	else
+	{
+		littlebumper6_on = false;
+	}
 	if (bodyB == Physlittlebumper7)
 	{
 		littlebumper7_on = true;
 		//App->audio->PlayFx(bonus_fx);
+	}
+	else
+	{
+		littlebumper7_on = false;
 	}
 }
 
