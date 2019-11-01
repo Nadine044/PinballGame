@@ -15,7 +15,7 @@
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
-	balls = background = bouncerText = HUD = NULL;
+	balls = background = launcherText = HUD = NULL;
 	sensed = false;
 }
 
@@ -31,11 +31,13 @@ bool ModuleSceneIntro::Start()
 	App->renderer->camera.x = 0;
 	App->renderer->camera.y = 0;
 
+	bouncerSpeed = 0.0f;
+
 	// Load textures
 	balls = App->textures->Load("assets/Player_control/ball.png"); 
 	bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
 	background = App->textures->Load("assets/Background/Background_finished.png");
-	bouncerText = App->textures->Load("assets/Player_control/bouncer.png");
+	launcherText = App->textures->Load("assets/Player_control/bouncer.png");
 	HUD = App->textures->Load("assets/HUD/HUD.png");
 
 	// Create colliders map
@@ -93,12 +95,12 @@ bool ModuleSceneIntro::Start()
 	Physlittlebumper7->body->SetType(b2_staticBody);
 	
 	// Create colliders bouncer
-	bouncer = App->physics->CreateBouncer(590, 1180, 22);
-	bouncer->listener = this;
+	launcher = App->physics->CreateLauncher(585 + 14.5, 999 + 90.5 - 15.5, 29, 150, launcher_joint);
+	launcher->listener = this;
 
 	// Create ball
 
-	ball = App->physics->CreateCircle(SCREEN_WIDTH * 0.5, 250, 15);
+	ball = App->physics->CreateCircle(585, 800, 14);
 	ball->listener = this;
 
 	return ret;
@@ -111,7 +113,7 @@ bool ModuleSceneIntro::CleanUp()
 
 	App->textures->Unload(balls);
 	App->textures->Unload(background);
-	App->textures->Unload(bouncerText);
+	App->textures->Unload(launcherText);
 	App->textures->Unload(HUD);
 
 	return true;
@@ -145,13 +147,35 @@ update_status ModuleSceneIntro::Update()
 	{
 		App->renderer->camera.y = DOWN_CAMERA_OFFSET;
 	}
-
 	
+	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT)
+	{
+		launcher_joint->SetMotorSpeed(-2);
+		bouncerSpeed += 1.2f;
+
+		if (bouncerSpeed > 60)
+		{
+			bouncerSpeed = 60;
+		}
+	}
+	else if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_UP)
+	{
+		launcher_joint->SetMotorSpeed(bouncerSpeed);
+		bouncerSpeed = 0;
+	}
+
+	int xB, yB;
+	launcher->GetPosition(xB, yB);
+
+	//bouncerSpeed = 0;
+
+	//vector velocity 0
 
 	// Blit to screen
 	App->renderer->Blit(background, 0, 0);
 	App->renderer->Blit(HUD, App->renderer->camera.x * (-1), App->renderer->camera.y * (-1));
 	App->renderer->Blit(balls, x, y, NULL, 1.0f, rotate, 16, 16);
+	App->renderer->Blit(launcherText, 585, 999, NULL);
 
 	return UPDATE_CONTINUE;
 }

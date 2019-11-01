@@ -3,6 +3,7 @@
 #include "ModuleInput.h"
 #include "ModuleRender.h"
 #include "ModulePhysics.h"
+#include "ModuleSceneIntro.h"
 #include "p2Point.h"
 #include "math.h"
 
@@ -75,18 +76,18 @@ update_status ModulePhysics::PreUpdate()
 	return UPDATE_CONTINUE;
 }
 
-PhysBody* ModulePhysics::CreateBouncer(int x, int y, int radius)
+PhysBody* ModulePhysics::CreateBouncer(float x, float y, int width, int height)
 {
 	b2BodyDef body;
-	body.type = b2_staticBody;
+	body.type = b2_kinematicBody;
 	body.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
 
 	b2Body* b = world->CreateBody(&body);
+	b2PolygonShape box;
+	box.SetAsBox(PIXEL_TO_METERS(width) * 0.5f, PIXEL_TO_METERS(height) * 0.5f);
 
-	b2CircleShape shape;
-	shape.m_radius = PIXEL_TO_METERS(radius);
 	b2FixtureDef fixture;
-	fixture.shape = &shape;
+	fixture.shape = &box;
 	fixture.density = 1.0f;
 
 	b->CreateFixture(&fixture);
@@ -94,7 +95,8 @@ PhysBody* ModulePhysics::CreateBouncer(int x, int y, int radius)
 	PhysBody* pbody = new PhysBody();
 	pbody->body = b;
 	b->SetUserData(pbody);
-	pbody->width = pbody->height = radius;
+	pbody->width = width * 0.5f;
+	pbody->height = height * 0.5f;
 
 	return pbody;
 }
@@ -431,4 +433,27 @@ void ModulePhysics::BeginContact(b2Contact* contact)
 
 	if(physB && physB->listener != NULL)
 		physB->listener->OnCollision(physB, physA);
+}
+
+PhysBody *ModulePhysics::CreateLauncher(int x, int y, int width, int height, b2PrismaticJoint* joint, SDL_Texture* tex)
+{
+	PhysBody* fixed_launcher = App->physics->CreateRectangleSensor(x, y, width, height, 0);
+	PhysBody* launcher = App->physics->CreateRectangle(x, y, width, height);
+
+	b2PrismaticJointDef joint_def;
+	joint_def.bodyA = launcher->body;
+	joint_def.bodyB = fixed_launcher->body;
+	joint_def.localAxisA.Set(0, 1);
+	joint_def.localAnchorA.Set(0, 0);
+	joint_def.localAnchorB.Set(0, 0);
+	joint_def.enableLimit = true;
+	joint_def.upperTranslation = 0;
+	joint_def.lowerTranslation = -1; //-1
+	joint_def.enableMotor = true;
+	joint_def.maxMotorForce = 800.0f;
+	joint_def.motorSpeed = 0.0f;
+
+	App->scene_intro->launcher_joint = (b2PrismaticJoint*)world->CreateJoint(&joint_def);
+
+	return launcher;
 }
