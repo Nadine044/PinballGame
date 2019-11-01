@@ -6,6 +6,7 @@
 
 class PhysBody;
 class b2PrismaticJoint;
+class b2RevoluteJoint;
 
 class ModuleSceneIntro : public Module
 {
@@ -33,6 +34,8 @@ public:
 	SDL_Texture* background = nullptr;
 	SDL_Texture* launcherText = nullptr;
 	SDL_Texture* HUD = nullptr;
+	SDL_Texture* rightFlipperText = nullptr;
+	SDL_Texture* leftFlipperText = nullptr;
 
 	// Load interactive textures
 	SDL_Texture* orangebird = nullptr;
@@ -82,12 +85,23 @@ public:
 	PhysBody* Physlittlebumper7 = nullptr;
 
 	PhysBody* ball = nullptr;
+	PhysBody* right_flipper = nullptr;
+	PhysBody* left_flipper = nullptr;
 
+	//Joints
 	b2PrismaticJoint* launcher_joint = NULL;
+	b2RevoluteJoint* flipper_r_joint = NULL;
+	b2RevoluteJoint* flipper_l_joint = NULL;
+
+	SDL_Rect flipper_rect;
+	SDL_Rect flipper_rect_r;
 
 	// Fx
 	uint bonus_fx = 0;
 
 	// Make interactive appear
 	bool orangebird_on = false;
+
+	//Flipper actions ===============================
+	void engageFlipper(PhysBody *flipper, float impulse);
 };

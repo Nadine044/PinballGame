@@ -36,11 +36,15 @@ bool ModuleSceneIntro::Start()
 
 	bouncerSpeed = 0.0f;
 
+	flipper_rect_r = { 515, 1000, 110, 47 };
+
 	// Load textures
 	balls = App->textures->Load("assets/Player_control/ball.png"); 
 	background = App->textures->Load("assets/Background/Background_finished.png");
 	launcherText = App->textures->Load("assets/Player_control/bouncer.png");
 	HUD = App->textures->Load("assets/HUD/HUD.png");
+	rightFlipperText = App->textures->Load("assets/Player_control/flipper1");
+	leftFlipperText = App->textures->Load("assets/Player_control/flipper1"); //flip texture
 
 	// Load interactive textures
 	orangebird = App->textures->Load("assets/Interactive/orange_bird_on_.png");
@@ -107,9 +111,20 @@ bool ModuleSceneIntro::Start()
 	launcher->listener = this;
 
 	// Create ball
-
 	ball = App->physics->CreateCircle(585, 800, 14);
 	ball->listener = this;
+
+	int right_flipper2[8]
+	{
+		0,  12,
+		0 ,-12,
+		-70,  7,
+		-70 ,-7
+	};
+
+	//Create flipper
+	b2Vec2 flipPos = { 500, 900 };
+	right_flipper = App->physics->CreateFlipper(b2Vec2(293 + 353 + 80, 918 + 120), right_flipper2, 8, b2Vec2(325 + 353 + 80, 918 + 120), -40, 30, flipper_r_joint);
 
 	return ret;
 }
@@ -135,6 +150,19 @@ update_status ModuleSceneIntro::Update()
 		ball = App->physics->CreateCircle(App->input->GetMouseX(), App->input->GetMouseY(), 14);
 		ball->listener = this;
 	}
+
+	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_DOWN)
+	{
+		engageFlipper(right_flipper, 10.0f);
+		//	App->audio->PlayFx(flipper_fx);
+	}
+
+	// -------Flippers----------------------------------------------
+
+	/*int RightFlipPosX, RightFlipPosY;
+	right_flipper->GetPosition(RightFlipPosX, RightFlipPosY);
+	App->renderer->Blit(leftFlipperText, RightFlipPosX + 8 - 100, RightFlipPosY, &flipper_rect_r, 1.0f, right_flipper->GetRotation(), 30, 0);
+	*/
 
 	// All draw functions ------------------------------------------------------
 
@@ -188,6 +216,10 @@ update_status ModuleSceneIntro::Update()
 	App->renderer->Blit(HUD, App->renderer->camera.x * (-1), App->renderer->camera.y * (-1));
 	App->renderer->Blit(balls, x, y, NULL, 1.0f, rotate, 16, 16);
 	App->renderer->Blit(launcherText, 585, 999, NULL);
+	int RightFlipPosX = 215, RightFlipPosY = 1089;
+	App->renderer->Blit(rightFlipperText, RightFlipPosX, RightFlipPosY, &flipper_rect_r, 1.0f, right_flipper->GetRotation(), 30, 0);
+
+
 
 	return UPDATE_CONTINUE;
 }
@@ -215,4 +247,12 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 		bodyB->GetPosition(x, y);
 		App->renderer->DrawCircle(x, y, 50, 100, 100, 100);
 	}*/
+}
+
+void ModuleSceneIntro::engageFlipper(PhysBody *flipper, float impulse)
+{
+	if (flipper)
+	{
+		flipper->body->ApplyAngularImpulse(impulse, true);
+	}
 }
