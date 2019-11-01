@@ -46,7 +46,7 @@ public:
 	PhysBody *CreateLauncher(int x, int y, int width, int height, b2PrismaticJoint * joint, SDL_Texture *tex = nullptr);
 	PhysBody* CreateCircle(int x, int y, int radius);
 	PhysBody* CreateRectangle(int x, int y, int width, int height);
-	PhysBody* CreateRectangleSensor(int x, int y, int width, int height, Module* listener);
+	PhysBody* CreateRectangleSensor(int x, int y, int width, int height);//, Module* listener);
 	PhysBody* CreateChain(int x, int y, int* points, int size);
 
 	// b2ContactListener ---

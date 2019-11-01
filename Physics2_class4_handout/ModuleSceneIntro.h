@@ -34,10 +34,6 @@ public:
 	SDL_Texture* launcherText = nullptr;
 	SDL_Texture* HUD = nullptr;
 
-	PhysBody* Physbackground = nullptr;
-	PhysBody* launcher = nullptr;
-	PhysBody* ball = nullptr;
-
 	float rotate;
 	float bouncerSpeed;
 
