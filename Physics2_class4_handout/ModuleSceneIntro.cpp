@@ -28,6 +28,9 @@ bool ModuleSceneIntro::Start()
 	LOG("Loading Intro assets");
 	bool ret = true;
 
+	// Initialize interactive colliders
+	orangebird_on = false;
+
 	App->renderer->camera.x = 0;
 	App->renderer->camera.y = 0;
 
@@ -35,10 +38,15 @@ bool ModuleSceneIntro::Start()
 
 	// Load textures
 	balls = App->textures->Load("assets/Player_control/ball.png"); 
-	bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
 	background = App->textures->Load("assets/Background/Background_finished.png");
 	launcherText = App->textures->Load("assets/Player_control/bouncer.png");
 	HUD = App->textures->Load("assets/HUD/HUD.png");
+
+	// Load interactive textures
+	orangebird = App->textures->Load("assets/Interactive/orange_bird_on_.png");
+
+	// Load audio and fx
+	bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
 
 	// Create colliders map
 	Physbackground = App->physics->CreateChain(0, 0, backgroundChain, 144);
@@ -122,11 +130,11 @@ bool ModuleSceneIntro::CleanUp()
 // Update: draw background
 update_status ModuleSceneIntro::Update()
 {
-	/*if(App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
+	if(App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
 	{
-		ball=App->physics->CreateCircle(App->input->GetMouseX(), App->input->GetMouseY(), 15);
-		ball.getLast()->data->listener = this;
-	}*/
+		ball = App->physics->CreateCircle(App->input->GetMouseX(), App->input->GetMouseY(), 14);
+		ball->listener = this;
+	}
 
 	// All draw functions ------------------------------------------------------
 
@@ -173,6 +181,10 @@ update_status ModuleSceneIntro::Update()
 
 	// Blit to screen
 	App->renderer->Blit(background, 0, 0);
+	if (orangebird_on == true)
+	{
+		App->renderer->Blit(orangebird, 307, 1039);
+	}
 	App->renderer->Blit(HUD, App->renderer->camera.x * (-1), App->renderer->camera.y * (-1));
 	App->renderer->Blit(balls, x, y, NULL, 1.0f, rotate, 16, 16);
 	App->renderer->Blit(launcherText, 585, 999, NULL);
@@ -182,10 +194,15 @@ update_status ModuleSceneIntro::Update()
 
 void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 {
-	int x, y;
+	//int x, y;
 
 	App->audio->PlayFx(bonus_fx);
 
+	if (bodyB == Physorangebird)
+	{
+		orangebird_on = true;
+		App->audio->PlayFx(bonus_fx);
+	}
 	/*
 	if(bodyA)
 	{
@@ -198,9 +215,4 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 		bodyB->GetPosition(x, y);
 		App->renderer->DrawCircle(x, y, 50, 100, 100, 100);
 	}*/
-}
-
-void ModuleSceneIntro::FollowBall()
-{
-	
 }

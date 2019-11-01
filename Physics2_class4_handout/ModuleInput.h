@@ -42,7 +42,7 @@ public:
 
 	int GetMouseY() const
 	{
-		return mouse_y;
+		return mouse_y + 408;
 	}
 
 private:

@@ -17,7 +17,6 @@ public:
 	update_status Update();
 	bool CleanUp();
 	void OnCollision(PhysBody* bodyA, PhysBody* bodyB);
-	void FollowBall();
 
 public:
 	p2List<PhysBody*> circles;
@@ -29,10 +28,14 @@ public:
 	//PhysBody* sensor;
 	bool sensed = false;
 
+	// Load textures
 	SDL_Texture* balls = nullptr;
 	SDL_Texture* background = nullptr;
 	SDL_Texture* launcherText = nullptr;
 	SDL_Texture* HUD = nullptr;
+
+	// Load interactive textures
+	SDL_Texture* orangebird = nullptr;
 
 	float rotate;
 	float bouncerSpeed;
@@ -82,5 +85,9 @@ public:
 
 	b2PrismaticJoint* launcher_joint = NULL;
 
+	// Fx
 	uint bonus_fx = 0;
+
+	// Make interactive appear
+	bool orangebird_on = false;
 };
