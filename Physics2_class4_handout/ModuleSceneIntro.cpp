@@ -103,7 +103,7 @@ update_status ModuleSceneIntro::Update()
 		pushBouncer(bouncerSpeed);
 	}
 
-	bouncerSpeed = 0;
+	//bouncerSpeed = 0;
 
 	//vector velocity 0
 
@@ -138,10 +138,16 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 
 void ModuleSceneIntro::pushBouncer(float speed)
 {
+	int limit = 10;
+
 	b2Vec2 pos = { SCREEN_WIDTH * 0.5, 600 };
 	b2Vec2 vel = { 0, speed };
-	//bouncer->body->SetTransform(pos, 0);
-	bouncer->body->SetLinearVelocity(vel);
+
+	for (int count = 0; count <= limit; ++count)
+	{
+		bouncer->body->SetLinearVelocity(vel);
+	}
+	vel = { 0, 0 };
 }
 
 void ModuleSceneIntro::FollowBall()

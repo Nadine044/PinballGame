@@ -39,7 +39,7 @@ public:
 	PhysBody* ball = nullptr;
 
 	float rotate;
-	float bouncerSpeed = 2;
+	float bouncerSpeed = -8;
 
 	uint bonus_fx = 0;
 };
