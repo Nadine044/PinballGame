@@ -7,6 +7,7 @@
 #include "ModuleAudio.h"
 #include "ModulePhysics.h"
 #include "ChainCoords.h"
+#include "ModuleFonts.h"
 
 #define UP_OFFSET 380
 #define UP_CAMERA_OFFSET 0
@@ -58,6 +59,9 @@ bool ModuleSceneIntro::Start()
 
 	// Load audio and fx
 	bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
+
+	// Load number for score
+	font_score = App->fonts->Load("assets/HUD/numbers.png", "1234567890", 1);
 
 	// Create colliders map
 	Physbackground = App->physics->CreateChain(0, 0, backgroundChain, 144);
@@ -199,6 +203,11 @@ update_status ModuleSceneIntro::Update()
 	// if all birds activated +15000
 	
 	App->renderer->Blit(HUD, App->renderer->camera.x * (-1), App->renderer->camera.y * (-1));
+
+	// Check score and balls for blit
+	ScoreBlit();
+	BallsBlit();
+
 	App->renderer->Blit(balls, x, y, NULL, 1.0f, rotate, 16, 16);
 	App->renderer->Blit(launcherText, 585, 999, NULL);
 
@@ -512,4 +521,18 @@ void ModuleSceneIntro::CheckBlit()
 	{
 		App->renderer->Blit(littlebumper, 573, 279);
 	}
+}
+
+void ModuleSceneIntro::ScoreBlit()
+{
+	sprintf_s(score_text, 10, "%d", score);
+
+	App->fonts->BlitText(60, 25, font_score, score_text);
+}
+
+void ModuleSceneIntro::BallsBlit()
+{
+	sprintf_s(score_balls, 10, "%d", balls_number);
+
+	App->fonts->BlitText(555, 25, font_score, score_balls);
 }

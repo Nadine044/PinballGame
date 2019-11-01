@@ -18,6 +18,8 @@ public:
 	bool CleanUp();
 	void OnCollision(PhysBody* bodyA, PhysBody* bodyB);
 	void CheckBlit();
+	void ScoreBlit();
+	void BallsBlit();
 
 public:
 	p2List<PhysBody*> circles;
@@ -130,4 +132,13 @@ public:
 	bool littlebumper5_on = false;
 	bool littlebumper6_on = false;
 	bool littlebumper7_on = false;
+
+	// Score
+	int font_score = -1;
+	char score_text[10];
+	uint score = 0;
+
+	// Balls
+	char score_balls[10];
+	uint balls_number = 3;
 };
