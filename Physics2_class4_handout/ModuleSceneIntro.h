@@ -103,6 +103,8 @@ public:
 	PhysBody* ball = nullptr;
 
 	b2PrismaticJoint* launcher_joint = NULL;
+	bool ballIsCreated = false;
+	bool firstBall = true;
 
 	// Music
 	uint music = 0;
@@ -164,6 +166,9 @@ public:
 	// Balls
 	char score_balls[10];
 	uint balls_number = 3;
+
+	int ballPositionX;
+	int ballPositionY;
 
 	// Bonus
 	bool bonusbird = false;

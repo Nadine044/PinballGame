@@ -125,10 +125,6 @@ bool ModuleSceneIntro::Start()
 	launcher = App->physics->CreateLauncher(585 + 14.5, 999 + 90.5 - 15.5, 29, 150, launcher_joint);
 	launcher->listener = this;
 
-	// Create ball
-	ball = App->physics->CreateCircle(585, 800, 14);
-	ball->listener = this;
-
 	// Play music
 	App->audio->PlayMusic("assets/Sounds/Music/pinball_music.ogg");
 
@@ -159,23 +155,37 @@ update_status ModuleSceneIntro::Update()
 
 	// All draw functions ------------------------------------------------------
 
+
+	// Create ball
+	if (ballIsCreated == false || dead_on == true)
+	{
+		if (dead_on == true || firstBall == true)
+		{
+			ball = App->physics->CreateCircle(585 + 14.5, 999 + 90.5 - 15.5 - 100, 13);
+			ball->listener = this;
+			firstBall = false;
+		}
+		ballIsCreated = true;		
+	}
+
 	// Get ball position
 
-	int x, y;
-	ball->GetPosition(x, y);
+	ball->GetPosition(ballPositionX, ballPositionY);
 	rotate = ball->GetRotation();
-	App->renderer->camera.y = -y + (SCREEN_HEIGHT * 0.5);
+	App->renderer->camera.y = -ballPositionY + (SCREEN_HEIGHT * 0.5);
 
 
-	if (y < UP_OFFSET)
+	if (ballPositionY < UP_OFFSET)
 	{
 		App->renderer->camera.y = UP_CAMERA_OFFSET;
 	}
 
-	if (y > DOWN_OFFSET)
+	if (ballPositionY > DOWN_OFFSET)
 	{
 		App->renderer->camera.y = DOWN_CAMERA_OFFSET;
 	}
+
+	//create game ball
 	
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT)
 	{
@@ -219,7 +229,7 @@ update_status ModuleSceneIntro::Update()
 	addscore = false;
 	BallsBlit();
 
-	App->renderer->Blit(balls, x, y, NULL, 1.0f, rotate, 16, 16);
+	App->renderer->Blit(balls, ballPositionX, ballPositionY, NULL, 1.0f, rotate, 16, 16);
 	App->renderer->Blit(launcherText, 585, 999, NULL);
 
 	return UPDATE_CONTINUE;
