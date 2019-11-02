@@ -174,12 +174,38 @@ update_status ModuleSceneIntro::Update()
 	// Create ball
 	if (ballIsCreated == false || dead_on == true)
 	{
-		if (dead_on == true || firstBall == true)
+		//Create ball like CreateCircle
+		b2BodyDef body;
+		body.type = b2_dynamicBody;
+		body.position.Set(585 + 14.5, 999 + 90.5 - 15.5 - 100);
+
+		b2Body* b = App->physics->world->CreateBody(&body);
+
+		b2CircleShape shape;
+		shape.m_radius = 13;
+		b2FixtureDef fixture;
+		fixture.shape = &shape;
+		fixture.density = 1.0f;
+
+		b2Fixture* f = b->CreateFixture(&fixture);
+
+		ball = new PhysBody();
+		ball->body = b;
+		b->SetUserData(ball);
+		ball->width = ball->height = 13;
+
+		ball = App->physics->CreateCircle(585 + 14.5, 999 + 90.5 - 15.5 - 100, 13);
+		ball->listener = this;
+		firstBall = false;
+
+		if (dead_on == true)
 		{
-			ball = App->physics->CreateCircle(585 + 14.5, 999 + 90.5 - 15.5 - 100, 13);
-			ball->listener = this;
-			firstBall = false;
+			b->DestroyFixture(f);
+			App->physics->world->DestroyBody(b);
+			
+			//DestroyBall();
 		}
+
 		ballIsCreated = true;		
 	}
 
