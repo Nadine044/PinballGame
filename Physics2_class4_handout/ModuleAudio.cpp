@@ -47,6 +47,7 @@ bool ModuleAudio::Init()
 	return ret;
 }
 
+
 // Called before quitting
 bool ModuleAudio::CleanUp()
 {
@@ -69,6 +70,36 @@ bool ModuleAudio::CleanUp()
 	Mix_Quit();
 	SDL_QuitSubSystem(SDL_INIT_AUDIO);
 	return true;
+}
+
+// Unload Music
+bool ModuleAudio::UnloadMusic(const char* path)
+{
+	bool ret = true;
+
+	if (music != NULL)
+	{
+		Mix_FreeMusic(music);
+	}
+
+	return ret;
+}
+
+// Unload Fx
+bool ModuleAudio::UnloadFx(const char* path)
+{
+	bool ret = true;
+
+	p2List_item<Mix_Chunk*>* item;
+
+	for (item = fx.getFirst(); item != NULL; item = item->next)
+	{
+		Mix_FreeChunk(item->data);
+	}
+
+	fx.clear();
+
+	return ret;
 }
 
 // Play a music file

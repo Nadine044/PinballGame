@@ -8,6 +8,7 @@
 #include "ModulePhysics.h"
 #include "ChainCoords.h"
 #include "ModuleFonts.h"
+#include "ModuleWinScreen.h"
 
 #define UP_OFFSET 380
 #define UP_CAMERA_OFFSET 0
@@ -151,10 +152,23 @@ bool ModuleSceneIntro::CleanUp()
 {
 	LOG("Unloading Intro scene");
 
+	// Unload textures
 	App->textures->Unload(balls);
 	App->textures->Unload(background);
 	App->textures->Unload(launcherText);
 	App->textures->Unload(HUD);
+	App->textures->Unload(yellowbird);
+	App->textures->Unload(greenbird);
+	App->textures->Unload(orangebird);
+	App->textures->Unload(bluebird);
+	App->textures->Unload(pinkbird);
+	App->textures->Unload(redbird);
+	App->textures->Unload(ninja);
+	App->textures->Unload(girl);
+	App->textures->Unload(square);
+	App->textures->Unload(actred);
+	App->textures->Unload(bumper);
+	App->textures->Unload(littlebumper);
 
 	return true;
 }
@@ -228,7 +242,7 @@ update_status ModuleSceneIntro::Update()
 
 	//create game ball
 	
-	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT)
+	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
 	{
 		launcher_joint->SetMotorSpeed(-2);
 		bouncerSpeed += 1.2f;
@@ -244,7 +258,7 @@ update_status ModuleSceneIntro::Update()
 			spring_fx = true;
 		}
 	}
-	else if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_UP)
+	else if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_UP)
 	{
 		launcher_joint->SetMotorSpeed(bouncerSpeed);
 		bouncerSpeed = 0;
@@ -265,8 +279,6 @@ update_status ModuleSceneIntro::Update()
 	
 	// Check all interactive blit
 	CheckBlit();
-	
-	// if all birds activated +15000
 	
 	App->renderer->Blit(HUD, App->renderer->camera.x * (-1), App->renderer->camera.y * (-1));
 
@@ -713,13 +725,15 @@ void ModuleSceneIntro::CheckBlit()
 	// Check dead
 	if (dead_on == true)
 	{
-		balls_number--;
 		App->audio->PlayFx(dead_fx);
+		
+		balls_number--;
 
-		if (balls_number < 0)
+		if (App->scene_intro->balls_number < 0)
 		{
-
+			App->win->endgame = true;
 		}
+
 		dead_on = false;
 	}
 }

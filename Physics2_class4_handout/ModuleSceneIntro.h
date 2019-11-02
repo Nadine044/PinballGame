@@ -191,7 +191,7 @@ public:
 
 	// Balls
 	char score_balls[10];
-	uint balls_number = 3;
+	int balls_number = 0;
 
 	int ballPositionX;
 	int ballPositionY;
