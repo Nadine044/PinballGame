@@ -111,14 +111,40 @@ public:
 
 	// Fx
 	uint hit_fx = 0;
-	uint yellowbird_fx = 0;
-	uint greenbird_fx = 0;
-	uint orangebird_fx = 0;
-	uint bluebird_fx = 0;
-	uint pinkbird_fx = 0;
-	uint redbird_fx = 0;
-	uint ninja_fx = 0;
-	uint girl_fx = 0;
+	uint dead_fx = 0;
+	uint bird_bird_fx = 0;
+	uint bird_girl_fx = 0;
+	uint ninjagirl_fx = 0;
+	uint bouncer_fx = 0;
+	uint square_fx = 0;
+	uint actred_fx = 0;
+	uint bonustunnel_fx = 0;
+	uint birdsbonus_fx = 0;
+	uint squarebonus_fx = 0;
+	uint ninjagirlbonus_fx = 0;
+	uint springpull_fx = 0;
+	uint springrelease_fx = 0;
+
+	// Play fx one time
+	bool yellow_bird_fx = false;
+	bool green_bird_fx = false;
+	bool orange_bird_fx = false;
+	bool blue_bird_fx = false;
+	bool pink_bird_fx = false;
+	bool red_bird_fx = false;
+	bool ninja_one_fx = false;
+	bool girl_one_fx = false;
+	bool square1_one_fx = false;
+	bool square2_one_fx = false;
+	bool actred1_one_fx = false;
+	bool actred2_one_fx = false;
+	bool actred3_one_fx = false;
+	bool actred4_one_fx = false;
+	bool actred5_one_fx = false;
+	bool actred6_one_fx = false;
+	bool actred7_one_fx = false;
+	bool actred8_one_fx = false;
+	bool spring_fx = false;
 
 	// Make interactive appear
 	bool yellowbird_on = false;
