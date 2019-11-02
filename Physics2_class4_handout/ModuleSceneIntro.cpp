@@ -58,7 +58,22 @@ bool ModuleSceneIntro::Start()
 	littlebumper = App->textures->Load("assets/Interactive/red_bumper_on_.png");
 
 	// Load audio and fx
-	hit_fx = App->audio->LoadFx("pinball/bonus.wav");
+	hit_fx = App->audio->LoadFx("assets/Sounds/Fx/ball_hit.wav");
+	dead_fx = App->audio->LoadFx("assets/Sounds/Fx/ball_dead.wav");
+	bird_bird_fx = App->audio->LoadFx("assets/Sounds/Fx/hit_bird_bird.wav");
+	bird_girl_fx = App->audio->LoadFx("assets/Sounds/Fx/hit_bird_girl.wav");
+	ninjagirl_fx = App->audio->LoadFx("assets/Sounds/Fx/ninjagirl_hit.wav");
+	bouncer_fx = App->audio->LoadFx("assets/Sounds/Fx/hit_bouncer.wav");
+	square_fx = App->audio->LoadFx("assets/Sounds/Fx/square_hit.wav");
+	actred_fx = App->audio->LoadFx("assets/Sounds/Fx/hit_dog.wav");
+	bonustunnel_fx = App->audio->LoadFx("assets/Sounds/Fx/left_tunnel_bonus.wav");
+	birdsbonus_fx = App->audio->LoadFx("assets/Sounds/Fx/bird_bonus.wav");
+	squarebonus_fx = App->audio->LoadFx("assets/Sounds/Fx/square_bonus.wav");
+	ninjagirlbonus_fx = App->audio->LoadFx("assets/Sounds/Fx/ninjagirl_bonus.wav");
+	springpull_fx = App->audio->LoadFx("assets/Sounds/Fx/spring_pull.wav");
+	springrelease_fx = App->audio->LoadFx("assets/Sounds/Fx/spring_release.wav");
+	
+	
 
 	// Load number for score
 	font_score = App->fonts->Load("assets/HUD/numbers.png", "1234567890", 1);
@@ -186,11 +201,20 @@ update_status ModuleSceneIntro::Update()
 		{
 			bouncerSpeed = 60;
 		}
+		
+		if (spring_fx == false)
+		{
+			App->audio->PlayFx(springpull_fx);
+			spring_fx = true;
+		}
 	}
 	else if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_UP)
 	{
 		launcher_joint->SetMotorSpeed(bouncerSpeed);
 		bouncerSpeed = 0;
+
+		App->audio->PlayFx(springrelease_fx);
+		spring_fx = false;
 	}
 
 	int xB, yB;
@@ -227,44 +251,73 @@ update_status ModuleSceneIntro::Update()
 
 void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 {
-	App->audio->PlayFx(hit_fx);
+	// Ball hit
+	if (bodyB == Physbackground || bodyB == Physbottomleft || bodyB == Physbottomright || bodyB == Physrighttriangle || bodyB == Physlefttriangle || bodyB == Physlefttunnel)
+	{
+		App->audio->PlayFx(hit_fx);
+	}
 
 	// Birds
 	if (bodyB == Physyellowbird)
 	{
 		yellowbird_on = true;
 		addscore = true;
-		//App->audio->PlayFx(bonus_fx);
+		if (yellow_bird_fx == false)
+		{
+			App->audio->PlayFx(bird_girl_fx);
+			yellow_bird_fx = true;
+		}
+		
 	}
 	if (bodyB == Physgreenbird)
 	{
 		greenbird_on = true;
 		addscore = true;
-		//App->audio->PlayFx(bonus_fx);
+		if (green_bird_fx == false)
+		{
+			App->audio->PlayFx(bird_bird_fx);
+			green_bird_fx = true;
+		}
 	}
 	if (bodyB == Physorangebird)
 	{
 		orangebird_on = true;
 		addscore = true;
-		//App->audio->PlayFx(bonus_fx);
+		if (orange_bird_fx == false)
+		{
+			App->audio->PlayFx(bird_bird_fx);
+			orange_bird_fx = true;
+		}
 	}
 	if (bodyB == Physbluebird)
 	{
 		bluebird_on = true;
 		addscore = true;
-		//App->audio->PlayFx(bonus_fx);
+		if (blue_bird_fx == false)
+		{
+			App->audio->PlayFx(bird_girl_fx);
+			blue_bird_fx = true;
+		}
 	}
 	if (bodyB == Physpinkbird)
 	{
 		pinkbird_on = true;
 		addscore = true;
-		//App->audio->PlayFx(bonus_fx);
+		if (pink_bird_fx == false)
+		{
+			App->audio->PlayFx(bird_bird_fx);
+			pink_bird_fx = true;
+		}
 	}
 	if (bodyB == Physredbird)
 	{
 		redbird_on = true;
 		addscore = true;
-		//App->audio->PlayFx(bonus_fx);
+		if (red_bird_fx == false)
+		{
+			App->audio->PlayFx(bird_girl_fx);
+			red_bird_fx = true;
+		}
 	}
 
 	// Ninja and girl
@@ -272,13 +325,21 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	{
 		ninja_on = true;
 		addscore = true;
-		//App->audio->PlayFx(bonus_fx);
+		if (ninja_one_fx == false)
+		{
+			App->audio->PlayFx(ninjagirl_fx);
+			ninja_one_fx = true;
+		}
 	}
 	if (bodyB == Physgirl)
 	{
 		girl_on = true;
 		addscore = true;
-		//App->audio->PlayFx(bonus_fx);
+		if (girl_one_fx == false)
+		{
+			App->audio->PlayFx(ninjagirl_fx);
+			girl_one_fx = true;
+		}
 	}
 
 	// Squares
@@ -286,13 +347,21 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	{
 		square1_on = true;
 		addscore = true;
-		//App->audio->PlayFx(bonus_fx);
+		if (square1_one_fx == false)
+		{
+			App->audio->PlayFx(square_fx);
+			square1_one_fx = true;
+		}
 	}
 	if (bodyB == Physsquare2)
 	{
 		square2_on = true;
 		addscore = true;
-		//App->audio->PlayFx(bonus_fx);
+		if (square2_one_fx == false)
+		{
+			App->audio->PlayFx(square_fx);
+			square2_one_fx = true;
+		}
 	}
 
 	// Active red
@@ -300,49 +369,81 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	{
 		actred1_on = true;
 		addscore = true;
-		//App->audio->PlayFx(bonus_fx);
+		if (actred1_one_fx == false)
+		{
+			App->audio->PlayFx(actred_fx);
+			actred1_one_fx = true;
+		}
 	}
 	if (bodyB == Physactred2)
 	{
 		actred2_on = true;
 		addscore = true;
-		//App->audio->PlayFx(bonus_fx);
+		if (actred2_one_fx == false)
+		{
+			App->audio->PlayFx(actred_fx);
+			actred2_one_fx = true;
+		}
 	}
 	if (bodyB == Physactred3)
 	{
 		actred3_on = true;
 		addscore = true;
-		//App->audio->PlayFx(bonus_fx);
+		if (actred3_one_fx == false)
+		{
+			App->audio->PlayFx(actred_fx);
+			actred3_one_fx = true;
+		}
 	}
 	if (bodyB == Physactred4)
 	{
 		actred4_on = true;
 		addscore = true;
-		//App->audio->PlayFx(bonus_fx);
+		if (actred4_one_fx == false)
+		{
+			App->audio->PlayFx(actred_fx);
+			actred4_one_fx = true;
+		}
 	}
 	if (bodyB == Physactred5)
 	{
 		actred5_on = true;
 		addscore = true;
-		//App->audio->PlayFx(bonus_fx);
+		if (actred5_one_fx == false)
+		{
+			App->audio->PlayFx(actred_fx);
+			actred5_one_fx = true;
+		}
 	}
 	if (bodyB == Physactred6)
 	{
 		actred6_on = true;
 		addscore = true;
-		//App->audio->PlayFx(bonus_fx);
+		if (actred6_one_fx == false)
+		{
+			App->audio->PlayFx(actred_fx);
+			actred6_one_fx = true;
+		}
 	}
 	if (bodyB == Physactred7)
 	{
 		actred7_on = true;
 		addscore = true;
-		//App->audio->PlayFx(bonus_fx);
+		if (actred7_one_fx == false)
+		{
+			App->audio->PlayFx(actred_fx);
+			actred7_one_fx = true;
+		}
 	}
 	if (bodyB == Physactred8)
 	{
 		actred8_on = true;
 		addscore = true;
-		//App->audio->PlayFx(bonus_fx);
+		if (actred8_one_fx == false)
+		{
+			App->audio->PlayFx(actred_fx);
+			actred8_one_fx = true;
+		}
 	}
 
 	// Check bumpers
@@ -350,7 +451,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	{
 		bumper1_on = true;
 		addscore = true;
-		//App->audio->PlayFx(bonus_fx);
+		App->audio->PlayFx(bouncer_fx);
 	}
 	else
 	{
@@ -360,7 +461,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	{
 		bumper2_on = true;
 		addscore = true;
-		//App->audio->PlayFx(bonus_fx);
+		App->audio->PlayFx(bouncer_fx);
 	}
 	else
 	{
@@ -372,7 +473,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	{
 		littlebumper1_on = true;
 		addscore = true;
-		//App->audio->PlayFx(bonus_fx);
+		App->audio->PlayFx(bouncer_fx);
 	}
 	else
 	{
@@ -382,7 +483,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	{
 		littlebumper2_on = true;
 		addscore = true;
-		//App->audio->PlayFx(bonus_fx);
+		App->audio->PlayFx(bouncer_fx);
 	}
 	else
 	{
@@ -392,7 +493,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	{
 		littlebumper3_on = true;
 		addscore = true;
-		//App->audio->PlayFx(bonus_fx);
+		App->audio->PlayFx(bouncer_fx);
 	}
 	else
 	{
@@ -402,7 +503,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	{
 		littlebumper4_on = true;
 		addscore = true;
-		//App->audio->PlayFx(bonus_fx);
+		App->audio->PlayFx(bouncer_fx);
 	}
 	else
 	{
@@ -412,7 +513,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	{
 		littlebumper5_on = true;
 		addscore = true;
-		//App->audio->PlayFx(bonus_fx);
+		App->audio->PlayFx(bouncer_fx);
 	}
 	else
 	{
@@ -422,7 +523,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	{
 		littlebumper6_on = true;
 		addscore = true;
-		//App->audio->PlayFx(bonus_fx);
+		App->audio->PlayFx(bouncer_fx);
 	}
 	else
 	{
@@ -432,7 +533,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	{
 		littlebumper7_on = true;
 		addscore = true;
-		//App->audio->PlayFx(bonus_fx);
+		App->audio->PlayFx(bouncer_fx);
 	}
 	else
 	{
@@ -443,14 +544,13 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	if (bodyB == Physlefttunnelbonus)
 	{
 		lefttunnelbonus_on = true;
-		//App->audio->PlayFx(bonus_fx);
+		App->audio->PlayFx(bonustunnel_fx);
 	}
 
 	// Dead
 	if (bodyB == Physdead)
 	{
 		dead_on = true;
-		//App->audio->PlayFx(bonus_fx);
 	}
 }
 
@@ -578,6 +678,8 @@ void ModuleSceneIntro::CheckBlit()
 	if (dead_on == true)
 	{
 		balls_number--;
+		App->audio->PlayFx(dead_fx);
+
 		if (balls_number < 0)
 		{
 
@@ -610,6 +712,7 @@ void ModuleSceneIntro::BonusBlit()
 	if (bonusbird == false && yellowbird_on == true && greenbird_on == true && orangebird_on == true && bluebird_on == true && pinkbird_on == true && redbird_on == true)
 	{
 		score += 15000;
+		App->audio->PlayFx(birdsbonus_fx);
 		bonusbird = true;
 	}
 
@@ -617,6 +720,7 @@ void ModuleSceneIntro::BonusBlit()
 	if (bonussquare == false && square1_on == true && square2_on == true)
 	{
 		score += 500000;
+		App->audio->PlayFx(squarebonus_fx);
 		bonussquare = true;
 	}
 
@@ -631,6 +735,7 @@ void ModuleSceneIntro::BonusBlit()
 	if (bonusninjagirl == false && ninja_on == true && girl_on == true)
 	{
 		score += 20000;
+		App->audio->PlayFx(ninjagirlbonus_fx);
 		bonusninjagirl = true;
 	}
 }
