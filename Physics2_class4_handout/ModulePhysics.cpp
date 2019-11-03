@@ -457,3 +457,63 @@ PhysBody *ModulePhysics::CreateLauncher(int x, int y, int width, int height, b2P
 
 	return launcher;
 }
+
+PhysBody* ModulePhysics::CreatePolygon(int x, int y, int* points, int size, bool dynamic)
+{
+	b2BodyDef body_def;
+
+	if (dynamic)
+		body_def.type = b2_dynamicBody;
+	else
+		body_def.type = b2_staticBody;
+
+	body_def.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
+
+	b2Body* b = world->CreateBody(&body_def);
+
+	b2PolygonShape shape;
+	b2Vec2* vertices = new b2Vec2[size / 2];
+
+	for (uint i = 0; i < size / 2; ++i)
+	{
+		vertices[i].x = PIXEL_TO_METERS(points[i * 2 + 0]);
+		vertices[i].y = PIXEL_TO_METERS(points[i * 2 + 1]);
+	}
+
+	shape.Set(vertices, size / 2);
+
+	b2FixtureDef fixture;
+	fixture.shape = &shape;
+	fixture.density = 1.0f;
+	b->CreateFixture(&fixture);
+
+	delete vertices;
+
+	PhysBody* pbody = new PhysBody();
+	pbody->body = b;
+	b->SetUserData(pbody);
+	pbody->width = pbody->height = 0;
+
+	return pbody;
+}
+
+PhysBody* ModulePhysics::CreateFlipper(b2Vec2 position, int * points, int size, b2Vec2 rotation_point, float32 lower_angle, float32 upper_angle, b2RevoluteJoint *joint)
+
+{
+	PhysBody* flipper = CreatePolygon(position.x, position.y, points, size);
+	PhysBody* rotor = CreateCircle(rotation_point.x, rotation_point.y, 12);
+
+	b2RevoluteJointDef joint_def;
+
+	joint_def.bodyA = flipper->body;
+	joint_def.bodyB = rotor->body;
+	joint_def.lowerAngle = lower_angle * DEGTORAD;
+	joint_def.upperAngle = upper_angle * DEGTORAD;
+	joint_def.localAnchorA.Set(0, 0);
+	joint_def.localAnchorB.Set(0, 0);
+	joint_def.collideConnected = false;
+	joint_def.enableLimit = true;
+
+	joint = (b2RevoluteJoint*)world->CreateJoint(&joint_def);
+	return flipper;
+}

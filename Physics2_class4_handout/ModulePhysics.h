@@ -43,7 +43,9 @@ public:
 	bool CleanUp();
 
 	PhysBody* CreateBouncer(float x, float y, int width, int height);
-	PhysBody *CreateLauncher(int x, int y, int width, int height, b2PrismaticJoint * joint, SDL_Texture *tex = nullptr);
+	PhysBody* CreateLauncher(int x, int y, int width, int height, b2PrismaticJoint * joint, SDL_Texture *tex = nullptr);
+	PhysBody* CreateFlipper(b2Vec2 position, int* points, int size, b2Vec2 rotation_point, float32 lower_angle, float32 upper_angle, b2RevoluteJoint *joint);
+	PhysBody* CreatePolygon(int x, int y, int* points, int size, bool dynamic = true);
 	PhysBody* CreateCircle(int x, int y, int radius);
 	PhysBody* CreateRectangle(int x, int y, int width, int height);
 	PhysBody* CreateRectangleSensor(int x, int y, int width, int height);//, Module* listener);
