@@ -468,6 +468,26 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	}
 
 	// Birds
+	if (bodyB == Physredbird)
+	{
+		if (red_bird_fx == false)
+		{
+			App->audio->PlayFx(bird_girl_fx);
+			red_bird_fx = true;
+		}
+		redbird_on = true;
+		addscore = true;
+	}
+	if (bodyB == Physpinkbird)
+	{
+		if (pink_bird_fx == false)
+		{
+			App->audio->PlayFx(bird_bird_fx);
+			pink_bird_fx = true;
+		}
+		pinkbird_on = true;
+		addscore = true;
+	}
 	if (bodyB == Physyellowbird)
 	{
 		yellowbird_on = true;
@@ -509,26 +529,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 			blue_bird_fx = true;
 		}
 	}
-	if (bodyB == Physpinkbird)
-	{
-		pinkbird_on = true;
-		addscore = true;
-		if (pink_bird_fx == false)
-		{
-			App->audio->PlayFx(bird_bird_fx);
-			pink_bird_fx = true;
-		}
-	}
-	if (bodyB == Physredbird)
-	{
-		redbird_on = true;
-		addscore = true;
-		if (red_bird_fx == false)
-		{
-			App->audio->PlayFx(bird_girl_fx);
-			red_bird_fx = true;
-		}
-	}
+	
 
 	// Ninja and girl
 	if (bodyB == Physninja)
