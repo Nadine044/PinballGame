@@ -368,8 +368,8 @@ update_status ModuleSceneIntro::Update()
 		
 	}
   
-  App->renderer->Blit(HUD, App->renderer->camera.x * (-1), App->renderer->camera.y * (-1));
-	App->renderer->Blit(balls, x, y, NULL, 1.0f, rotate, 16, 16);
+    App->renderer->Blit(HUD, App->renderer->camera.x * (-1), App->renderer->camera.y * (-1));
+	App->renderer->Blit(balls, ballPositionX, ballPositionY, NULL, 1.0f, rotate, 16, 16);
 
 	int launcherPosX, launcherPosY;
 	launcher->GetPosition(launcherPosX, launcherPosY);
