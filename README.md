@@ -21,6 +21,8 @@ We used box2D library programming with C++.
 
 - LEFT ARROW & RIGHT ARROW: Move flippers.
 
+- R: Restart the game when Game Over.
+
 ### Debug keys
 
 - F1: View game colliders (shapes, sensors, colliders...)
