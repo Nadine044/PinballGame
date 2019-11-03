@@ -88,6 +88,8 @@ public:
 	PhysBody* right_flipper = nullptr;
 	PhysBody* left_flipper = nullptr;
 
+	PhysBody* left_flipper_joint = nullptr;
+
 	//Joints
 	b2PrismaticJoint* launcher_joint = NULL;
 	b2RevoluteJoint* flipper_r_joint = NULL;

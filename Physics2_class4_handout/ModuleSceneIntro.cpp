@@ -124,7 +124,9 @@ bool ModuleSceneIntro::Start()
 	};
 	flipper_rect_l = { 0, 86, 92, 42 };
 	//0,86,92,42
-	left_flipper = App->physics->CreateFlipper(b2Vec2(SCREEN_WIDTH * 0.5, 600), left_flipper2, 8, b2Vec2(133 + 400, 918 + 110), -30, 40, flipper_l_joint);
+	left_flipper_joint = App->physics->CreateRectangle(200, 1080, 20, 8);
+	left_flipper_joint->body->SetType(b2_staticBody);
+	left_flipper = App->physics->CreateFlipper(b2Vec2(212, 1090), left_flipper2, 8, b2Vec2(200, 1100), -30, 10, flipper_l_joint);
 	return ret;
 }
 
@@ -216,6 +218,7 @@ update_status ModuleSceneIntro::Update()
 	App->renderer->Blit(HUD, App->renderer->camera.x * (-1), App->renderer->camera.y * (-1));
 	App->renderer->Blit(balls, x, y, NULL, 1.0f, rotate, 16, 16);
 	App->renderer->Blit(launcherText, 585, 999, NULL);
+	App->renderer->Blit(NULL, 200, 1080, NULL, 1.0f);
 	App->renderer->Blit(leftFlipperText, SCREEN_WIDTH * 0.5 - 300, 800, &flipper_rect_l, 1.0f, left_flipper->GetRotation(), 30, 0);
 
 	return UPDATE_CONTINUE;
