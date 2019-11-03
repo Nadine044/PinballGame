@@ -170,7 +170,7 @@ bool ModuleSceneIntro::Start()
 	top_little_clipper_right_collider = App->physics->CreatePolygon(540, 243, little_clipper_right_form, 16);
 
 	// Create colliders bouncer
-	launcher = App->physics->CreateLauncher(585 + 14.5, 999 + 90.5 - 15.5, 29, 150, launcher_joint);
+	launcher = App->physics->CreateLauncher(585 + 14.5, 980 + 90.5 - 15.5, 29, 150, launcher_joint);
 	launcher->listener = this;
 
 	// Create clippers
@@ -258,7 +258,7 @@ update_status ModuleSceneIntro::Update()
 		b->SetUserData(ball);
 		ball->width = ball->height = 13;
 
-		ball = App->physics->CreateCircle(585 + 14.5, 999 + 90.5 - 15.5 - 100, 13);
+		ball = App->physics->CreateCircle(585 + 14.5, 990 + 90.5 - 15.5 - 100, 13);
 		ball->listener = this;
 		firstBall = false;
 
@@ -299,11 +299,11 @@ update_status ModuleSceneIntro::Update()
 		if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
 		{
 			launcher_joint->SetMotorSpeed(-2);
-			bouncerSpeed += 0.5f;
+			bouncerSpeed += 1.2f;
 
-			if (bouncerSpeed > 15)
+			if (bouncerSpeed > 40)
 			{
-				bouncerSpeed = 15;
+				bouncerSpeed = 90;
 			}
 
 			if (spring_fx == false)
