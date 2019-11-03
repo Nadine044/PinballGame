@@ -7,8 +7,6 @@
 #include "ModuleAudio.h"
 #include "ModulePhysics.h"
 #include "ChainCoords.h"
-#include "ModuleFonts.h"
-#include "ModuleWinScreen.h"
 
 #define UP_OFFSET 380
 #define UP_CAMERA_OFFSET 0
@@ -49,37 +47,10 @@ bool ModuleSceneIntro::Start()
 	leftFlipperText = App->textures->Load("assets/Player_control/flipper1.png"); //flip texture
 
 	// Load interactive textures
-	yellowbird = App->textures->Load("assets/Interactive/yellow_bird_on_.png");
-	greenbird = App->textures->Load("assets/Interactive/green_bird_on_.png");
 	orangebird = App->textures->Load("assets/Interactive/orange_bird_on_.png");
-	bluebird = App->textures->Load("assets/Interactive/blue_bird_on_.png");
-	pinkbird = App->textures->Load("assets/Interactive/pink_bird_on_.png");
-	redbird = App->textures->Load("assets/Interactive/red_bird_on_.png");
-	ninja = App->textures->Load("assets/Interactive/ninja_on_.png");
-	girl = App->textures->Load("assets/Interactive/girl_on_.png");
-	square = App->textures->Load("assets/Interactive/green_square_on_.png");
-	actred = App->textures->Load("assets/Interactive/red_ball_on_.png");
-	bumper = App->textures->Load("assets/Interactive/green_bumper_on_.png");
-	littlebumper = App->textures->Load("assets/Interactive/red_bumper_on_.png");
 
 	// Load audio and fx
-	hit_fx = App->audio->LoadFx("assets/Sounds/Fx/ball_hit.wav");
-	dead_fx = App->audio->LoadFx("assets/Sounds/Fx/ball_dead.wav");
-	bird_bird_fx = App->audio->LoadFx("assets/Sounds/Fx/hit_bird_bird.wav");
-	bird_girl_fx = App->audio->LoadFx("assets/Sounds/Fx/hit_bird_girl.wav");
-	ninjagirl_fx = App->audio->LoadFx("assets/Sounds/Fx/ninjagirl_hit.wav");
-	bouncer_fx = App->audio->LoadFx("assets/Sounds/Fx/hit_bouncer.wav");
-	square_fx = App->audio->LoadFx("assets/Sounds/Fx/square_hit.wav");
-	actred_fx = App->audio->LoadFx("assets/Sounds/Fx/hit_dog.wav");
-	bonustunnel_fx = App->audio->LoadFx("assets/Sounds/Fx/left_tunnel_bonus.wav");
-	birdsbonus_fx = App->audio->LoadFx("assets/Sounds/Fx/bird_bonus.wav");
-	squarebonus_fx = App->audio->LoadFx("assets/Sounds/Fx/square_bonus.wav");
-	ninjagirlbonus_fx = App->audio->LoadFx("assets/Sounds/Fx/ninjagirl_bonus.wav");
-	springpull_fx = App->audio->LoadFx("assets/Sounds/Fx/spring_pull.wav");
-	springrelease_fx = App->audio->LoadFx("assets/Sounds/Fx/spring_release.wav");
-	
-	// Load number for score
-	font_score = App->fonts->Load("assets/HUD/numbers.png", "1234567890", 1);
+	bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
 
 	// Create colliders map
 	Physbackground = App->physics->CreateChain(0, 0, backgroundChain, 144);
@@ -92,9 +63,8 @@ bool ModuleSceneIntro::Start()
 	Physrighttriangle->body->SetType(b2_staticBody);
 	Physlefttriangle = App->physics->CreateChain(0, 0, Left_triangle, 12);
 	Physlefttriangle->body->SetType(b2_staticBody);
-	Physlefttunnel = App->physics->CreateChain(0, 0, Left_tunnel, 70);
+	Physlefttunnel = App->physics->CreateChain(0, 0, Left_tunnel, 86);
 	Physlefttunnel->body->SetType(b2_staticBody);
-	Physlefttunnelbonus = App->physics->CreateRectangleSensor(100, 746, 50, 20);
 
 	// Colliders interactive
 	Physyellowbird = App->physics->CreateRectangleSensor(186, 738, 74, 74);
@@ -135,20 +105,14 @@ bool ModuleSceneIntro::Start()
 	Physlittlebumper6->body->SetType(b2_staticBody);
 	Physlittlebumper7 = App->physics->CreateCircle(586, 291, 15);
 	Physlittlebumper7->body->SetType(b2_staticBody);
-
-	// Collider dead
-	Physdead = App->physics->CreateRectangleSensor(306, 1175, 250, 10);
 	
 	// Create colliders bouncer
 	launcher = App->physics->CreateLauncher(585 + 14.5, 999 + 90.5 - 15.5, 29, 150, launcher_joint);
 	launcher->listener = this;
-  
-  // Create ball
+
+	// Create ball
 	ball = App->physics->CreateCircle(585, 800, 13);
 	ball->listener = this;
-  
-	// Play music
-	App->audio->PlayMusic("assets/Sounds/Music/pinball_music.ogg");
 
 	//Create flipper
 	// Pivot 0, 0
@@ -177,26 +141,11 @@ bool ModuleSceneIntro::CleanUp()
 {
 	LOG("Unloading Intro scene");
 
-	// Unload textures
 	App->textures->Unload(balls);
 	App->textures->Unload(background);
 	App->textures->Unload(launcherText);
 	App->textures->Unload(HUD);
-  
-  App->textures->Unload(leftFlipperText);
-  
-	App->textures->Unload(yellowbird);
-	App->textures->Unload(greenbird);
-	App->textures->Unload(orangebird);
-	App->textures->Unload(bluebird);
-	App->textures->Unload(pinkbird);
-	App->textures->Unload(redbird);
-	App->textures->Unload(ninja);
-	App->textures->Unload(girl);
-	App->textures->Unload(square);
-	App->textures->Unload(actred);
-	App->textures->Unload(bumper);
-	App->textures->Unload(littlebumper);
+	App->textures->Unload(leftFlipperText);
 
 	return true;
 }
@@ -225,91 +174,40 @@ update_status ModuleSceneIntro::Update()
 
 	// All draw functions ------------------------------------------------------
 
-
-	// Create ball
-	if (ballIsCreated == false || dead_on == true)
-	{
-		//Create ball like CreateCircle
-		b2BodyDef body;
-		body.type = b2_dynamicBody;
-		body.position.Set(585 + 14.5, 999 + 90.5 - 15.5 - 100);
-
-		b2Body* b = App->physics->world->CreateBody(&body);
-
-		b2CircleShape shape;
-		shape.m_radius = 13;
-		b2FixtureDef fixture;
-		fixture.shape = &shape;
-		fixture.density = 1.0f;
-
-		b2Fixture* f = b->CreateFixture(&fixture);
-
-		ball = new PhysBody();
-		ball->body = b;
-		b->SetUserData(ball);
-		ball->width = ball->height = 13;
-
-		ball = App->physics->CreateCircle(585 + 14.5, 999 + 90.5 - 15.5 - 100, 13);
-		ball->listener = this;
-		firstBall = false;
-
-		if (dead_on == true)
-		{
-			b->DestroyFixture(f);
-			App->physics->world->DestroyBody(b);
-			
-			//DestroyBall();
-		}
-
-		ballIsCreated = true;		
-	}
-
 	// Get ball position
 
-	ball->GetPosition(ballPositionX, ballPositionY);
+	int x, y;
+	ball->GetPosition(x, y);
 	rotate = ball->GetRotation();
-	App->renderer->camera.y = -ballPositionY + (SCREEN_HEIGHT * 0.5);
+	App->renderer->camera.y = -y + (SCREEN_HEIGHT * 0.5);
 
 
-	if (ballPositionY < UP_OFFSET)
+	if (y < UP_OFFSET)
 	{
 		App->renderer->camera.y = UP_CAMERA_OFFSET;
 	}
 
-	if (ballPositionY > DOWN_OFFSET)
+	if (y > DOWN_OFFSET)
 	{
 		App->renderer->camera.y = DOWN_CAMERA_OFFSET;
 	}
-
-	//create game ball
 	
-	if (App->win->endgame == false)
+	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT)
 	{
-		if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
+		launcher_joint->SetMotorSpeed(-2);
+		bouncerSpeed += 1.2f;
+
+		if (bouncerSpeed > 60)
 		{
-			launcher_joint->SetMotorSpeed(-2);
-			bouncerSpeed += 1.2f;
-
-			if (bouncerSpeed > 60)
-			{
-				bouncerSpeed = 60;
-			}
-
-			if (spring_fx == false)
-			{
-				App->audio->PlayFx(springpull_fx);
-				spring_fx = true;
-			}
-		}
-		else if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_UP)
-		{
-			launcher_joint->SetMotorSpeed(bouncerSpeed);
-			bouncerSpeed = 0;
-
-			App->audio->PlayFx(springrelease_fx);
-			spring_fx = false;
+			bouncerSpeed = 60;
 		}
 	}
+	else if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_UP)
+	{
+		launcher_joint->SetMotorSpeed(bouncerSpeed);
+		bouncerSpeed = 0;
+	}
+
 	int xB, yB;
 	launcher->GetPosition(xB, yB);
 
@@ -317,58 +215,13 @@ update_status ModuleSceneIntro::Update()
 
 	//vector velocity 0
 
-	if (App->win->endgame == false)
+	// Blit to screen
+	App->renderer->Blit(background, 0, 0);
+	if (orangebird_on == true)
 	{
-		// Blit to screen
-		App->renderer->Blit(background, 0, 0);
-
-		// Check all interactive blit
-		CheckBlit();
-
-		App->renderer->Blit(HUD, App->renderer->camera.x * (-1), App->renderer->camera.y * (-1));
-
-		// Check score and balls for blit
-		ScoreBlit();
-
-		// Check bonus points
-		BonusBlit();
-
-		addscore = false;
-		BallsBlit();
-
-		App->renderer->Blit(balls, ballPositionX, ballPositionY, NULL, 1.0f, rotate, 16, 16);
-		App->renderer->Blit(launcherText, 585, 999, NULL);
+		App->renderer->Blit(orangebird, 307, 1039);
 	}
-
-	if (App->win->endgame == true)
-	{
-		App->renderer->Blit(App->win->winscreen, 0, 0);
-
-		// Previous score
-		if (App->win->prevscore == false)
-		{
-			App->win->previousscore = App->win->actualscore;
-			App->win->prevscore = true;
-		}
-		sprintf_s(App->win->score_textend, 10, "%d", App->win->previousscore);
-		App->fonts->BlitText(300, 400, font_score, App->win->score_textend);
-
-		// Actual score
-		App->win->actualscore = score;
-		sprintf_s(App->win->score_textend, 10, "%d", App->win->actualscore);
-		App->fonts->BlitText(300, 280, font_score, App->win->score_textend);
-
-		// High score
-		if (App->win->actualscore > App->win->highscore)
-		{
-			App->win->highscore = App->win->actualscore;
-		}
-		sprintf_s(App->win->score_textend, 10, "%d", App->win->highscore);
-		App->fonts->BlitText(300, 520, font_score, App->win->score_textend);
-		
-	}
-  
-  App->renderer->Blit(HUD, App->renderer->camera.x * (-1), App->renderer->camera.y * (-1));
+	App->renderer->Blit(HUD, App->renderer->camera.x * (-1), App->renderer->camera.y * (-1));
 	App->renderer->Blit(balls, x, y, NULL, 1.0f, rotate, 16, 16);
 
 	int launcherPosX, launcherPosY;
@@ -385,495 +238,27 @@ update_status ModuleSceneIntro::Update()
 
 void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 {
-	// Ball hit
-	if (bodyB == Physbackground || bodyB == Physbottomleft || bodyB == Physbottomright || bodyB == Physrighttriangle || bodyB == Physlefttriangle || bodyB == Physlefttunnel)
-	{
-		App->audio->PlayFx(hit_fx);
-	}
+	//int x, y;
 
-	// Birds
-	if (bodyB == Physyellowbird)
-	{
-		yellowbird_on = true;
-		addscore = true;
-		if (yellow_bird_fx == false)
-		{
-			App->audio->PlayFx(bird_girl_fx);
-			yellow_bird_fx = true;
-		}
-		
-	}
-	if (bodyB == Physgreenbird)
-	{
-		greenbird_on = true;
-		addscore = true;
-		if (green_bird_fx == false)
-		{
-			App->audio->PlayFx(bird_bird_fx);
-			green_bird_fx = true;
-		}
-	}
+	App->audio->PlayFx(bonus_fx);
+
 	if (bodyB == Physorangebird)
 	{
 		orangebird_on = true;
-		addscore = true;
-		if (orange_bird_fx == false)
-		{
-			App->audio->PlayFx(bird_bird_fx);
-			orange_bird_fx = true;
-		}
+		App->audio->PlayFx(bonus_fx);
 	}
-	if (bodyB == Physbluebird)
+	/*
+	if(bodyA)
 	{
-		bluebird_on = true;
-		addscore = true;
-		if (blue_bird_fx == false)
-		{
-			App->audio->PlayFx(bird_girl_fx);
-			blue_bird_fx = true;
-		}
-	}
-	if (bodyB == Physpinkbird)
-	{
-		pinkbird_on = true;
-		addscore = true;
-		if (pink_bird_fx == false)
-		{
-			App->audio->PlayFx(bird_bird_fx);
-			pink_bird_fx = true;
-		}
-	}
-	if (bodyB == Physredbird)
-	{
-		redbird_on = true;
-		addscore = true;
-		if (red_bird_fx == false)
-		{
-			App->audio->PlayFx(bird_girl_fx);
-			red_bird_fx = true;
-		}
+		bodyA->GetPosition(x, y);
+		App->renderer->DrawCircle(x, y, 50, 100, 100, 100);
 	}
 
-	// Ninja and girl
-	if (bodyB == Physninja)
-	{
-		ninja_on = true;
-		addscore = true;
-		if (ninja_one_fx == false)
-		{
-			App->audio->PlayFx(ninjagirl_fx);
-			ninja_one_fx = true;
-		}
-	}
-	if (bodyB == Physgirl)
-	{
-		girl_on = true;
-		addscore = true;
-		if (girl_one_fx == false)
-		{
-			App->audio->PlayFx(ninjagirl_fx);
-			girl_one_fx = true;
-		}
-	}
-
-	// Squares
-	if (bodyB == Physsquare1)
-	{
-		square1_on = true;
-		addscore = true;
-		if (square1_one_fx == false)
-		{
-			App->audio->PlayFx(square_fx);
-			square1_one_fx = true;
-		}
-	}
-	if (bodyB == Physsquare2)
-	{
-		square2_on = true;
-		addscore = true;
-		if (square2_one_fx == false)
-		{
-			App->audio->PlayFx(square_fx);
-			square2_one_fx = true;
-		}
-	}
-
-	// Active red
-	if (bodyB == Physactred1)
-	{
-		actred1_on = true;
-		addscore = true;
-		if (actred1_one_fx == false)
-		{
-			App->audio->PlayFx(actred_fx);
-			actred1_one_fx = true;
-		}
-	}
-	if (bodyB == Physactred2)
-	{
-		actred2_on = true;
-		addscore = true;
-		if (actred2_one_fx == false)
-		{
-			App->audio->PlayFx(actred_fx);
-			actred2_one_fx = true;
-		}
-	}
-	if (bodyB == Physactred3)
-	{
-		actred3_on = true;
-		addscore = true;
-		if (actred3_one_fx == false)
-		{
-			App->audio->PlayFx(actred_fx);
-			actred3_one_fx = true;
-		}
-	}
-	if (bodyB == Physactred4)
-	{
-		actred4_on = true;
-		addscore = true;
-		if (actred4_one_fx == false)
-		{
-			App->audio->PlayFx(actred_fx);
-			actred4_one_fx = true;
-		}
-	}
-	if (bodyB == Physactred5)
-	{
-		actred5_on = true;
-		addscore = true;
-		if (actred5_one_fx == false)
-		{
-			App->audio->PlayFx(actred_fx);
-			actred5_one_fx = true;
-		}
-	}
-	if (bodyB == Physactred6)
-	{
-		actred6_on = true;
-		addscore = true;
-		if (actred6_one_fx == false)
-		{
-			App->audio->PlayFx(actred_fx);
-			actred6_one_fx = true;
-		}
-	}
-	if (bodyB == Physactred7)
-	{
-		actred7_on = true;
-		addscore = true;
-		if (actred7_one_fx == false)
-		{
-			App->audio->PlayFx(actred_fx);
-			actred7_one_fx = true;
-		}
-	}
-	if (bodyB == Physactred8)
-	{
-		actred8_on = true;
-		addscore = true;
-		if (actred8_one_fx == false)
-		{
-			App->audio->PlayFx(actred_fx);
-			actred8_one_fx = true;
-		}
-	}
-
-	// Check bumpers
-	if (bodyB == Physbumper1)
-	{
-		bumper1_on = true;
-		addscore = true;
-		App->audio->PlayFx(bouncer_fx);
-	}
-	else
-	{
-		bumper1_on = false;
-	}
-	if (bodyB == Physbumper2)
-	{
-		bumper2_on = true;
-		addscore = true;
-		App->audio->PlayFx(bouncer_fx);
-	}
-	else
-	{
-		bumper2_on = false;
-	}
-
-	// Check littlebumpers
-	if (bodyB == Physlittlebumper1)
-	{
-		littlebumper1_on = true;
-		addscore = true;
-		App->audio->PlayFx(bouncer_fx);
-	}
-	else
-	{
-		littlebumper1_on = false;
-	}
-	if (bodyB == Physlittlebumper2)
-	{
-		littlebumper2_on = true;
-		addscore = true;
-		App->audio->PlayFx(bouncer_fx);
-	}
-	else
-	{
-		littlebumper2_on = false;
-	}
-	if (bodyB == Physlittlebumper3)
-	{
-		littlebumper3_on = true;
-		addscore = true;
-		App->audio->PlayFx(bouncer_fx);
-	}
-	else
-	{
-		littlebumper3_on = false;
-	}
-	if (bodyB == Physlittlebumper4)
-	{
-		littlebumper4_on = true;
-		addscore = true;
-		App->audio->PlayFx(bouncer_fx);
-	}
-	else
-	{
-		littlebumper4_on = false;
-	}
-	if (bodyB == Physlittlebumper5)
-	{
-		littlebumper5_on = true;
-		addscore = true;
-		App->audio->PlayFx(bouncer_fx);
-	}
-	else
-	{
-		littlebumper5_on = false;
-	}
-	if (bodyB == Physlittlebumper6)
-	{
-		littlebumper6_on = true;
-		addscore = true;
-		App->audio->PlayFx(bouncer_fx);
-	}
-	else
-	{
-		littlebumper6_on = false;
-	}
-	if (bodyB == Physlittlebumper7)
-	{
-		littlebumper7_on = true;
-		addscore = true;
-		App->audio->PlayFx(bouncer_fx);
-	}
-	else
-	{
-		littlebumper7_on = false;
-	}
-
-	// Bonus tunnel
-	if (bodyB == Physlefttunnelbonus)
-	{
-		lefttunnelbonus_on = true;
-		App->audio->PlayFx(bonustunnel_fx);
-	}
-
-	// Dead
-	if (bodyB == Physdead)
-	{
-		dead_on = true;
-	}
-}
-
-void ModuleSceneIntro::CheckBlit()
-{
-	// Check bird on
-	if (yellowbird_on == true)
-	{
-		App->renderer->Blit(yellowbird, 144, 701);
-	}
-	if (greenbird_on == true)
-	{
-		App->renderer->Blit(greenbird, 334, 879);
-	}
-	if (orangebird_on == true)
-	{
-		App->renderer->Blit(orangebird, 266, 1004);
-	}
-	if (bluebird_on == true)
-	{
-		App->renderer->Blit(bluebird, 198, 879);
-	}
-	if (pinkbird_on == true)
-	{
-		App->renderer->Blit(pinkbird, 281, 670);
-	}
-	if (redbird_on == true)
-	{
-		App->renderer->Blit(redbird, 421, 701);
-	}
-
-	// Check ninja and girl on
-	if (ninja_on == true)
-	{
-		App->renderer->Blit(ninja, 46, 890);
-	}
-	if (girl_on == true)
-	{
-		App->renderer->Blit(girl, 485, 886);
-	}
-
-	// Check squares on
-	if (square1_on == true)
-	{
-		App->renderer->Blit(square, 311, 343);
-	}
-	if (square2_on == true)
-	{
-		App->renderer->Blit(square, 447, 129);
-	}
-
-	// Check red active on
-	if (actred1_on == true)
-	{
-		App->renderer->Blit(actred, 133, 641);
-	}
-	if (actred2_on == true)
-	{
-		App->renderer->Blit(actred, 119, 422);
-	}
-	if (actred3_on == true)
-	{
-		App->renderer->Blit(actred, 119, 361);
-	}
-	if (actred4_on == true)
-	{
-		App->renderer->Blit(actred, 139, 263);
-	}
-	if (actred5_on == true)
-	{
-		App->renderer->Blit(actred, 394, 77);
-	}
-	if (actred6_on == true)
-	{
-		App->renderer->Blit(actred, 510, 77);
-	}
-	if (actred7_on == true)
-	{
-		App->renderer->Blit(actred, 534, 323);
-	}
-	if (actred8_on == true)
-	{
-		App->renderer->Blit(actred, 535, 545);
-	}
-
-	// Check bumper on
-	if (bumper1_on == true)
-	{
-		App->renderer->Blit(bumper, 326, 516);
-	}
-	if (bumper2_on == true)
-	{
-		App->renderer->Blit(bumper, 487, 380);
-	}
-	if (littlebumper1_on == true)
-	{
-		App->renderer->Blit(littlebumper, 529, 855);
-	}
-	if (littlebumper2_on == true)
-	{
-		App->renderer->Blit(littlebumper, 135, 328);
-	}
-	if (littlebumper3_on == true)
-	{
-		App->renderer->Blit(littlebumper, 290, 164);
-	}
-	if (littlebumper4_on == true)
-	{
-		App->renderer->Blit(littlebumper, 385, 153);
-	}
-	if (littlebumper5_on == true)
-	{
-		App->renderer->Blit(littlebumper, 464, 76);
-	}
-	if (littlebumper6_on == true)
-	{
-		App->renderer->Blit(littlebumper, 535, 153);
-	}
-	if (littlebumper7_on == true)
-	{
-		App->renderer->Blit(littlebumper, 573, 279);
-	}
-	
-	// Check dead
-	if (dead_on == true)
-	{
-		App->audio->PlayFx(dead_fx);
-		
-		balls_number--;
-
-		if (App->scene_intro->balls_number < 0)
-		{
-			App->win->endgame = true;
-		}
-
-		dead_on = false;
-	}
-}
-
-void ModuleSceneIntro::ScoreBlit()
-{
-	sprintf_s(score_text, 10, "%d", score);
-
-	if (addscore == true)
-	{
-		score += 100;
-	}
-	App->fonts->BlitText(5, 25, font_score, score_text);
-}
-
-void ModuleSceneIntro::BallsBlit()
-{
-	sprintf_s(score_balls, 10, "%d", balls_number);
-
-	App->fonts->BlitText(555, 25, font_score, score_balls);
-}
-
-void ModuleSceneIntro::BonusBlit()
-{
-	// Pyo blocs bonus +15000 (all birds)
-	if (bonusbird == false && yellowbird_on == true && greenbird_on == true && orangebird_on == true && bluebird_on == true && pinkbird_on == true && redbird_on == true)
-	{
-		score += 15000;
-		App->audio->PlayFx(birdsbonus_fx);
-		bonusbird = true;
-	}
-
-	// Big pixel bonus +500000 (squares)
-	if (bonussquare == false && square1_on == true && square2_on == true)
-	{
-		score += 500000;
-		App->audio->PlayFx(squarebonus_fx);
-		bonussquare = true;
-	}
-
-	// loop bonus +50000 (left tunnel)
-	if (lefttunnelbonus_on == true)
-	{
-		score += 50000;
-		lefttunnelbonus_on = false;
-	}
-	
-	// meow meow happy fight bonus +20000 (ninja and girl)
-	if (bonusninjagirl == false && ninja_on == true && girl_on == true)
-	{
-		score += 20000;
-		App->audio->PlayFx(ninjagirlbonus_fx);
-		bonusninjagirl = true;
-	}
+	if(bodyB)
+	{
+		bodyB->GetPosition(x, y);
+		App->renderer->DrawCircle(x, y, 50, 100, 100, 100);
+	}*/
 }
 
 void ModuleSceneIntro::engageFlipper(PhysBody *flipper, float impulse)
