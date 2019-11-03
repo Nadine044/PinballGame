@@ -6,7 +6,6 @@
 
 class PhysBody;
 class b2PrismaticJoint;
-class b2RevoluteJoint;
 
 class ModuleSceneIntro : public Module
 {
@@ -38,8 +37,6 @@ public:
 	SDL_Texture* background = nullptr;
 	SDL_Texture* launcherText = nullptr;
 	SDL_Texture* HUD = nullptr;
-	SDL_Texture* rightFlipperText = nullptr;
-	SDL_Texture* leftFlipperText = nullptr;
 
 	// Load interactive textures
 	SDL_Texture* yellowbird = nullptr;
@@ -62,7 +59,7 @@ public:
 	PhysBody* Physbackground = nullptr;
 	PhysBody* launcher = nullptr;
 
-	PhysBody* Physbottomleft = nullptr;
+	PhysBody * Physbottomleft = nullptr;
 	PhysBody* Physbottomright = nullptr;
 	PhysBody* Physrighttriangle = nullptr;
 	PhysBody* Physlefttriangle = nullptr;
@@ -104,20 +101,8 @@ public:
 	PhysBody* Physdead = nullptr;
 
 	PhysBody* ball = nullptr;
-	PhysBody* right_flipper = nullptr;
-	PhysBody* left_flipper = nullptr;
 
-	PhysBody* left_flipper_joint = nullptr;
-
-	//Joints
 	b2PrismaticJoint* launcher_joint = NULL;
-  
-  b2RevoluteJoint* flipper_r_joint = NULL;
-	b2RevoluteJoint* flipper_l_joint = NULL;
-
-	SDL_Rect flipper_rect_l;
-	SDL_Rect flipper_rect_r;
-=======
 	bool ballIsCreated = false;
 	bool firstBall = true;
 
@@ -165,10 +150,6 @@ public:
 	bool yellowbird_on = false;
 	bool greenbird_on = false;
 	bool orangebird_on = false;
-  
-  //Flipper actions ===============================
-	void engageFlipper(PhysBody *flipper, float impulse);
-=======
 	bool bluebird_on = false;
 	bool pinkbird_on = false;
 	bool redbird_on = false;
