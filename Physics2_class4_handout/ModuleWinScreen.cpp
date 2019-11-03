@@ -43,7 +43,7 @@ update_status ModuleWinScreen::Update()
 	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN && endgame == true)
 	{
 		App->scene_intro->score = 0;
-		App->scene_intro->balls_number = 0;
+		App->scene_intro->balls_number = 3;
 
 		// Play fx one time
 		App->scene_intro->yellow_bird_fx = false;
