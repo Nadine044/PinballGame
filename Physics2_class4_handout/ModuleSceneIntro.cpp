@@ -78,8 +78,10 @@ bool ModuleSceneIntro::Start()
 	font_score = App->fonts->Load("assets/HUD/numbers.png", "1234567890", 1);
 
 	// Create colliders map
-	Physbackground = App->physics->CreateChain(0, 0, backgroundChain, 144);
-	Physbackground->body->SetType(b2_staticBody);
+	Physbackground_1 = App->physics->CreateChain(0, 0, BackgroundChain_1, 54);
+	Physbackground_1->body->SetType(b2_staticBody);
+	Physbackground_2 = App->physics->CreateChain(0, 0, BackgroundChain_2, 74);
+	Physbackground_2->body->SetType(b2_staticBody);
 	Physbottomleft = App->physics->CreateChain(0, 0, Bottom_left, 18);
 	Physbottomleft->body->SetType(b2_staticBody);
 	Physbottomright = App->physics->CreateChain(0, 0, Bottom_right, 18);
@@ -133,7 +135,7 @@ bool ModuleSceneIntro::Start()
 	Physlittlebumper7->body->SetType(b2_staticBody);
 
 	// Collider dead
-	Physdead = App->physics->CreateRectangleSensor(306, 1175, 250, 10);
+	Physdead = App->physics->CreateRectangleSensor(306, 1200, 250, 10);
 	
 	// Create colliders bouncer
 	launcher = App->physics->CreateLauncher(585 + 14.5, 999 + 90.5 - 15.5, 29, 150, launcher_joint);
@@ -331,7 +333,7 @@ update_status ModuleSceneIntro::Update()
 void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 {
 	// Ball hit
-	if (bodyB == Physbackground || bodyB == Physbottomleft || bodyB == Physbottomright || bodyB == Physrighttriangle || bodyB == Physlefttriangle || bodyB == Physlefttunnel)
+	if (bodyB == Physbackground_1|| Physbackground_2 || bodyB == Physbottomleft || bodyB == Physbottomright || bodyB == Physrighttriangle || bodyB == Physlefttriangle || bodyB == Physlefttunnel)
 	{
 		App->audio->PlayFx(hit_fx);
 	}

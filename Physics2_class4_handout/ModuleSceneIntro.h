@@ -56,7 +56,8 @@ public:
 	float bouncerSpeed;
 
 	// Colliders map
-	PhysBody* Physbackground = nullptr;
+	PhysBody* Physbackground_1 = nullptr;
+	PhysBody* Physbackground_2 = nullptr;
 	PhysBody* launcher = nullptr;
 
 	PhysBody * Physbottomleft = nullptr;
