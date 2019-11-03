@@ -1,11 +1,12 @@
 # PinballGame
-This project is a Pinball Game.
-This game is created by two students of the CITM (UPC) on the Physics II subject of the degree in the second academic year.
-We used box2D library.
+This is a Pinball Game. You have to push the ball through this pinball to get points, and then, a final score. Try to beat your highest score!!
+
+This game is created by two students of the CITM (UPC) on the Physics II subject of the degree, in the second academic year.
+We used box2D library programming with C++.
 
 ## Instructions to execute:
 
-- Download the release: INSERT LINK
+- Download the latest release.
 
 - Unzip the file.
 
