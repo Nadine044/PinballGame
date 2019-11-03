@@ -179,7 +179,7 @@ bool ModuleSceneIntro::Start()
 
 	// Create little clippers
 	little_clipper_left_joint = App->physics->Createclipper(little_clipper_left_collider->body, little_clipper_left_axis->body, 20, 24, -60, 10);
-	little_clipper_right_joint = App->physics->Createclipper(little_clipper_right_collider->body, little_clipper_right_axis->body, 83, 19, 20, 60);
+	little_clipper_right_joint = App->physics->Createclipper(little_clipper_right_collider->body, little_clipper_right_axis->body, 83, 19, -10, 60);
 
 	// Create top little clippers
 	top_little_clipper_left_joint = App->physics->Createclipper(top_little_clipper_left_collider->body, top_little_clipper_left_axis->body, 20, 24, -20, 10);
