@@ -124,9 +124,9 @@ bool ModuleSceneIntro::Start()
 	};
 	flipper_rect_l = { 0, 86, 92, 42 };
 	//0,86,92,42
-	left_flipper_joint = App->physics->CreateRectangle(200, 1080, 20, 8);
+	left_flipper_joint = App->physics->CreateRectangle(195, 1085, 25, 5);
 	left_flipper_joint->body->SetType(b2_staticBody);
-	left_flipper = App->physics->CreateFlipper(b2Vec2(212, 1090), left_flipper2, 8, b2Vec2(200, 1100), -30, 10, flipper_l_joint);
+	left_flipper = App->physics->CreateFlipper(b2Vec2(212, 1090), left_flipper2, 8, b2Vec2(190, 1100), -30, 10, flipper_l_joint);
 	return ret;
 }
 
