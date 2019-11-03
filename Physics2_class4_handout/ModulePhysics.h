@@ -57,7 +57,7 @@ public:
 
 private:
 
-	bool debug;
+	bool debug = false;
 	
 	b2Body* ground;
 	b2RevoluteJoint* revolutejoint;

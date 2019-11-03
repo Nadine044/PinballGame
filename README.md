@@ -1,4 +1,4 @@
-# PinballGame
+﻿# PinballGame
 This is a Pinball Game. You have to push the ball through this pinball to get points, and then, a final score. Try to beat your highest score!!
 
 This game is created by two students of the CITM (UPC) on the Physics II subject of the degree, in the second academic year.
@@ -26,6 +26,12 @@ We used box2D library programming with C++.
 ### Debug keys
 
 - F1: View game colliders (shapes, sensors, colliders...)
+
+## Combos
+- Pyo blocs bonus +15000: You have to hit all birds.
+- Big pixel bonus +500000: You have to hit all squares.
+- Loop bonus +50000: You have to pass thought the left side.
+- Meow meow happy fight bonus +20000: You have to hit the boy and the girl.
 
 ## Links
 
