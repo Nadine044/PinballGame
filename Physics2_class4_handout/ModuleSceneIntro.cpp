@@ -47,6 +47,8 @@ bool ModuleSceneIntro::Start()
 	// Load flipper textures
 	clipper_left = App->textures->Load("assets/Player_control/clipper_1_left.png");
 	clipper_right = App->textures->Load("assets/Player_control/clipper_1_right.png");
+	little_clipper_left = App->textures->Load("assets/Player_control/clipper_2_left.png");
+	little_clipper_right = App->textures->Load("assets/Player_control/clipper_2_right.png");
 
 	// Load interactive textures
 	yellowbird = App->textures->Load("assets/Interactive/yellow_bird_on_.png");
@@ -86,7 +88,7 @@ bool ModuleSceneIntro::Start()
 	// Create colliders map
 	Physbackground_1 = App->physics->CreateChain(0, 0, BackgroundChain_1, 54);
 	Physbackground_1->body->SetType(b2_staticBody);
-	Physbackground_2 = App->physics->CreateChain(0, 0, BackgroundChain_2, 74);
+	Physbackground_2 = App->physics->CreateChain(0, 0, BackgroundChain_2, 76);
 	Physbackground_2->body->SetType(b2_staticBody);
 	Physbottomleft = App->physics->CreateChain(0, 0, Bottom_left, 16);
 	Physbottomleft->body->SetType(b2_staticBody);
@@ -143,22 +145,45 @@ bool ModuleSceneIntro::Start()
 	// Collider dead
 	Physdead = App->physics->CreateRectangleSensor(306, 1200, 250, 10);
 	
-	// Collider flippers
+	// Collider clippers
 	clipper_left_axis = App->physics->CreateCircle(210, 1100, 10);
 	clipper_left_axis->body->SetType(b2_staticBody);
 	clipper_right_axis = App->physics->CreateCircle(410, 1100, 10);
 	clipper_right_axis->body->SetType(b2_staticBody);
-	clipper_left_collider = App->physics->CreatePolygon(210, 1100, Flipper_L, 16);
-	clipper_right_collider = App->physics->CreatePolygon(410, 1100, Flipper_R, 16);
+	clipper_left_collider = App->physics->CreatePolygon(210, 1100, clipper_left_form, 16);
+	clipper_right_collider = App->physics->CreatePolygon(410, 1100, clipper_right_form, 16);
+	
+	// Collider little clippers
+	little_clipper_left_axis = App->physics->CreateCircle(141, 562, 8);
+	little_clipper_left_axis->body->SetType(b2_staticBody);
+	little_clipper_right_axis = App->physics->CreateCircle(580, 675, 8);
+	little_clipper_right_axis->body->SetType(b2_staticBody);
+	little_clipper_left_collider = App->physics->CreatePolygon(141, 562, little_clipper_left_form, 16);
+	little_clipper_right_collider = App->physics->CreatePolygon(570, 675, little_clipper_right_form, 16);
+	
+	// Collider top little clippers
+	top_little_clipper_left_axis = App->physics->CreateCircle(141, 562, 8);
+	top_little_clipper_left_axis->body->SetType(b2_staticBody);
+	top_little_clipper_right_axis = App->physics->CreateCircle(580, 675, 8);
+	top_little_clipper_right_axis->body->SetType(b2_staticBody);
+	top_little_clipper_left_collider = App->physics->CreatePolygon(141, 562, little_clipper_left_form, 16);
+	top_little_clipper_right_collider = App->physics->CreatePolygon(570, 675, little_clipper_right_form, 16);
 
 	// Create colliders bouncer
 	launcher = App->physics->CreateLauncher(585 + 14.5, 999 + 90.5 - 15.5, 29, 150, launcher_joint);
 	launcher->listener = this;
 
-	// Create flippers
+	// Create clippers
 	clipper_left_joint = App->physics->Createclipper(clipper_left_collider->body, clipper_left_axis->body, 20, 24, -10, 40);
 	clipper_right_joint = App->physics->Createclipper(clipper_right_collider->body, clipper_right_axis->body, 83, 19, -40, 10);
-	
+
+	// Create little clippers
+	little_clipper_left_joint = App->physics->Createclipper(little_clipper_left_collider->body, little_clipper_left_axis->body, 20, 24, -60, 10);
+	little_clipper_right_joint = App->physics->Createclipper(little_clipper_right_collider->body, little_clipper_right_axis->body, 83, 19, -10, 60);
+
+	// Create top little clippers
+	top_little_clipper_left_joint = App->physics->Createclipper(top_little_clipper_left_collider->body, top_little_clipper_left_axis->body, 20, 24, -60, 10);
+	top_little_clipper_right_joint = App->physics->Createclipper(top_little_clipper_right_collider->body, top_little_clipper_right_axis->body, 83, 19, -10, 60);
 
 	// Play music
 	App->audio->PlayMusic("assets/Sounds/Music/pinball_music.ogg");
@@ -198,9 +223,17 @@ bool ModuleSceneIntro::CleanUp()
 update_status ModuleSceneIntro::Update()
 {
 	// All draw functions ------------------------------------------------------
-	// Flipper motor
+	// Clipper motor
 	clipper_left_joint->SetMotorSpeed(-1000 * DEGTORAD);
 	clipper_right_joint->SetMotorSpeed(1000 * DEGTORAD);
+
+	// Little clipper motor
+	little_clipper_left_joint->SetMotorSpeed(-1000 * DEGTORAD);
+	little_clipper_right_joint->SetMotorSpeed(1000 * DEGTORAD);
+
+	// Top little clipper motor
+	top_little_clipper_left_joint->SetMotorSpeed(-1000 * DEGTORAD);
+	top_little_clipper_right_joint->SetMotorSpeed(1000 * DEGTORAD);
 
 	// Create ball
 	if (ballIsCreated == false || dead_on == true)
@@ -288,9 +321,20 @@ update_status ModuleSceneIntro::Update()
 		// Flipper move
 		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
 		{
+			// Clipper
 			clipper_left_joint->SetMotorSpeed(1000 * DEGTORAD);
 			clipper_left_collider->GetPosition(clipper_left_x, clipper_left_y);
 			clipper_left_rotation = clipper_left_collider->GetRotation();
+
+			// Little clipper
+			little_clipper_left_joint->SetMotorSpeed(1000 * DEGTORAD);
+			little_clipper_left_collider->GetPosition(little_clipper_left_x, little_clipper_left_y);
+			little_clipper_left_rotation = little_clipper_left_collider->GetRotation();
+
+			// Top little clipper
+			top_little_clipper_left_joint->SetMotorSpeed(1000 * DEGTORAD);
+			top_little_clipper_left_collider->GetPosition(top_little_clipper_left_x, top_little_clipper_left_y);
+			top_little_clipper_left_rotation = top_little_clipper_left_collider->GetRotation();
 
 			if (flippers_left_one_fx == false)
 			{
@@ -305,9 +349,20 @@ update_status ModuleSceneIntro::Update()
 
 		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
 		{
+			// Clipper
 			clipper_right_joint->SetMotorSpeed(-1000 * DEGTORAD);
 			clipper_right_collider->GetPosition(clipper_right_x, clipper_right_y);
 			clipper_right_rotation = clipper_right_collider->GetRotation();
+
+			// Little clipper
+			little_clipper_right_joint->SetMotorSpeed(-1000 * DEGTORAD);
+			little_clipper_right_collider->GetPosition(little_clipper_right_x, little_clipper_right_y);
+			little_clipper_right_rotation = little_clipper_right_collider->GetRotation();
+
+			// Top little clipper
+			top_little_clipper_right_joint->SetMotorSpeed(-1000 * DEGTORAD);
+			top_little_clipper_right_collider->GetPosition(top_little_clipper_right_x, top_little_clipper_right_y);
+			top_little_clipper_right_rotation = top_little_clipper_right_collider->GetRotation();
 
 			if (flippers_right_one_fx == false)
 			{
@@ -323,25 +378,34 @@ update_status ModuleSceneIntro::Update()
 	int xB, yB;
 	launcher->GetPosition(xB, yB);
 
-	//bouncerSpeed = 0;
-
-	//vector velocity 0
-
 	if (App->win->endgame == false)
 	{
 		// Blit to screen
 		App->renderer->Blit(background, 0, 0);
 
-		// Blit flippers
-		//Get coord to blit the images
+		// Blit clippers
 		clipper_left_rotation = clipper_left_collider->GetRotation();
 		clipper_left_collider->GetPosition(clipper_left_x, clipper_left_y);
-
 		clipper_right_rotation = clipper_right_collider->GetRotation();
 		clipper_right_collider->GetPosition(clipper_right_x, clipper_right_y);
-
 		App->renderer->Blit(clipper_left, (clipper_left_x), (clipper_left_y), NULL, 1.0f, clipper_left_rotation, -5, -5);
 		App->renderer->Blit(clipper_right, (clipper_right_x), (clipper_right_y), NULL, 1.0f, clipper_right_rotation, -1, 0);
+
+		// Blit little clippers
+		little_clipper_left_rotation = little_clipper_left_collider->GetRotation();
+		little_clipper_left_collider->GetPosition(little_clipper_left_x, little_clipper_left_y);
+		little_clipper_right_rotation = little_clipper_right_collider->GetRotation();
+		little_clipper_right_collider->GetPosition(little_clipper_right_x, little_clipper_right_y);
+		App->renderer->Blit(little_clipper_left, (little_clipper_left_x), (little_clipper_left_y), NULL, 1.0f, little_clipper_left_rotation, -5, -5);
+		App->renderer->Blit(little_clipper_right, (little_clipper_right_x), (little_clipper_right_y), NULL, 1.0f, little_clipper_right_rotation, -1, 0);
+
+		// Blit top little clippers
+		little_clipper_left_rotation = little_clipper_left_collider->GetRotation();
+		little_clipper_left_collider->GetPosition(little_clipper_left_x, little_clipper_left_y);
+		little_clipper_right_rotation = little_clipper_right_collider->GetRotation();
+		little_clipper_right_collider->GetPosition(little_clipper_right_x, little_clipper_right_y);
+		App->renderer->Blit(little_clipper_left, (little_clipper_left_x), (little_clipper_left_y), NULL, 1.0f, little_clipper_left_rotation, -5, -5);
+		App->renderer->Blit(little_clipper_right, (little_clipper_right_x), (little_clipper_right_y), NULL, 1.0f, little_clipper_right_rotation, -1, 0);
 
 		// Check all interactive blit
 		CheckBlit();

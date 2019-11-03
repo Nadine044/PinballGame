@@ -42,6 +42,8 @@ public:
 	// Load clippers textures
 	SDL_Texture* clipper_left = nullptr;
 	SDL_Texture* clipper_right = nullptr;
+	SDL_Texture* little_clipper_left = nullptr;
+	SDL_Texture* little_clipper_right = nullptr;
 
 	// Load interactive textures
 	SDL_Texture* yellowbird = nullptr;
@@ -73,6 +75,18 @@ public:
 	PhysBody* clipper_right_axis;
 	PhysBody* clipper_left_collider;
 	PhysBody* clipper_right_collider;
+
+	// Colliders little clippers and his axis
+	PhysBody* little_clipper_left_axis;
+	PhysBody* little_clipper_right_axis;
+	PhysBody* little_clipper_left_collider;
+	PhysBody* little_clipper_right_collider;
+
+	// Colliders top little clippers and his axis
+	PhysBody* top_little_clipper_left_axis;
+	PhysBody* top_little_clipper_right_axis;
+	PhysBody* top_little_clipper_left_collider;
+	PhysBody* top_little_clipper_right_collider;
 
 	// Colliders interactive
 	PhysBody* Physyellowbird = nullptr;
@@ -113,8 +127,15 @@ public:
 
 	//Joints
 	b2PrismaticJoint* launcher_joint = NULL;
+	// Clippers
 	b2RevoluteJoint* clipper_left_joint;
 	b2RevoluteJoint* clipper_right_joint;
+	// Little clippers
+	b2RevoluteJoint* little_clipper_left_joint;
+	b2RevoluteJoint* little_clipper_right_joint;
+	// Top little clippers
+	b2RevoluteJoint* top_little_clipper_left_joint;
+	b2RevoluteJoint* top_little_clipper_right_joint;
 
 	// Ball props
 	bool ballIsCreated = false;
@@ -123,7 +144,7 @@ public:
 	int ballPositionX;
 	int ballPositionY;
 
-	// Flipper props
+	// Clipper props
 	// Right
 	float clipper_right_rotation = 0;
 	int clipper_right_x = 0;
@@ -132,6 +153,26 @@ public:
 	float clipper_left_rotation = 0;
 	int clipper_left_x = 0;
 	int clipper_left_y = 0;
+
+	// Little clipper props
+	// Right
+	float little_clipper_right_rotation = 0;
+	int little_clipper_right_x = 0;
+	int little_clipper_right_y = 0;
+	// Left
+	float little_clipper_left_rotation = 0;
+	int little_clipper_left_x = 0;
+	int little_clipper_left_y = 0;
+
+	// Top little clipper props
+	// Right
+	float top_little_clipper_right_rotation = 0;
+	int top_little_clipper_right_x = 0;
+	int top_little_clipper_right_y = 0;
+	// Left
+	float top_little_clipper_left_rotation = 0;
+	int top_little_clipper_left_x = 0;
+	int top_little_clipper_left_y = 0;
 
 	// Music
 	uint music = 0;
