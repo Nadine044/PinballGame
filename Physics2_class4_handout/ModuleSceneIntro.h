@@ -39,6 +39,10 @@ public:
 	SDL_Texture* launcherText = nullptr;
 	SDL_Texture* HUD = nullptr;
 
+	// Load clippers textures
+	SDL_Texture* clipper_left = nullptr;
+	SDL_Texture* clipper_right = nullptr;
+
 	// Load interactive textures
 	SDL_Texture* yellowbird = nullptr;
 	SDL_Texture* greenbird = nullptr;
@@ -53,20 +57,22 @@ public:
 	SDL_Texture* bumper = nullptr;
 	SDL_Texture* littlebumper = nullptr;
 
-	float rotate;
-	float bouncerSpeed;
-
 	// Colliders map
 	PhysBody* Physbackground_1 = nullptr;
 	PhysBody* Physbackground_2 = nullptr;
 	PhysBody* launcher = nullptr;
-
-	PhysBody * Physbottomleft = nullptr;
+	PhysBody* Physbottomleft = nullptr;
 	PhysBody* Physbottomright = nullptr;
 	PhysBody* Physrighttriangle = nullptr;
 	PhysBody* Physlefttriangle = nullptr;
 	PhysBody* Physlefttunnel = nullptr;
 	PhysBody* Physlefttunnelbonus = nullptr;
+
+	// Colliders clippers and his axis
+	PhysBody* clipper_left_axis;
+	PhysBody* clipper_right_axis;
+	PhysBody* clipper_left_collider;
+	PhysBody* clipper_right_collider;
 
 	// Colliders interactive
 	PhysBody* Physyellowbird = nullptr;
@@ -102,10 +108,30 @@ public:
 	// Collider dead
 	PhysBody* Physdead = nullptr;
 
+	// Collider ball
 	PhysBody* ball = nullptr;
 
+	//Joints
+	b2PrismaticJoint* launcher_joint = NULL;
+	b2RevoluteJoint* clipper_left_joint;
+	b2RevoluteJoint* clipper_right_joint;
+
+	// Ball props
 	bool ballIsCreated = false;
 	bool firstBall = true;
+	float rotate;
+	int ballPositionX;
+	int ballPositionY;
+
+	// Flipper props
+	// Right
+	float clipper_right_rotation = 0;
+	int clipper_right_x = 0;
+	int clipper_right_y = 0;
+	// Left
+	float clipper_left_rotation = 0;
+	int clipper_left_x = 0;
+	int clipper_left_y = 0;
 
 	// Music
 	uint music = 0;
@@ -113,6 +139,8 @@ public:
 	// Fx
 	uint hit_fx = 0;
 	uint dead_fx = 0;
+	uint flippers_left_fx = 0;
+	uint flippers_right_fx = 0;
 	uint bird_bird_fx = 0;
 	uint bird_girl_fx = 0;
 	uint ninjagirl_fx = 0;
@@ -145,8 +173,10 @@ public:
 	bool actred6_one_fx = false;
 	bool actred7_one_fx = false;
 	bool actred8_one_fx = false;
+	bool flippers_left_one_fx = false;
+	bool flippers_right_one_fx = false;
 	bool spring_fx = false;
-
+	
 	// Make interactive appear
 	bool yellowbird_on = false;
 	bool greenbird_on = false;
@@ -177,6 +207,7 @@ public:
 	bool littlebumper5_on = false;
 	bool littlebumper6_on = false;
 	bool littlebumper7_on = false;
+	float bouncerSpeed;
 
 	// Tunnel bonus
 	bool lefttunnelbonus_on = false;
@@ -194,36 +225,8 @@ public:
 	char score_balls[10];
 	int balls_number = 3;
 
-	int ballPositionX;
-	int ballPositionY;
-
 	// Bonus
 	bool bonusbird = false;
 	bool bonussquare = false;
 	bool bonusninjagirl = false;
-
-	//Flippers
-	SDL_Rect flipper_rect_l;
-	SDL_Rect flipper_rect_r;
-
-	PhysBody* right_flipper = nullptr;
-	PhysBody* left_flipper = nullptr;
-
-	SDL_Texture* leftFlipperText = nullptr;
-
-	PhysBody* left_flipper_joint = nullptr;
-
-	//Flippers joints
-	//Joints
-	b2PrismaticJoint* launcher_joint = NULL;
-	b2RevoluteJoint* flipper_r_joint = NULL;
-	b2RevoluteJoint* flipper_l_joint = NULL;
-
-	void engageFlipper(PhysBody *flipper, float impulse);
 };
-// vermell nena
-// groc nena
-// taronja ocell
-// blau nena
-// verd ocell
-//rosa ocell

@@ -36,28 +36,9 @@ bool ModulePhysics::Start()
 	b2BodyDef bd;
 	ground = world->CreateBody(&bd);
 
-	// big static circle as "ground" in the middle of the screen
-	//int x = SCREEN_WIDTH / 2;
-	//int y = SCREEN_HEIGHT / 1.5f;
-	//int diameter = SCREEN_WIDTH / 2;
-
-	//b2BodyDef body;
-	//body.type = b2_staticBody;
-	//body.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
-
-	//b2Body* big_ball = world->CreateBody(&body);
-
-	//b2CircleShape shape;
-	//shape.m_radius = PIXEL_TO_METERS(diameter) * 0.5f;
-
-	//b2FixtureDef fixture;
-	//fixture.shape = &shape;
-	//big_ball->CreateFixture(&fixture);
-
 	return true;
 }
 
-// 
 update_status ModulePhysics::PreUpdate()
 {
 	world->Step(1.0f / 60.0f, 6, 2);
@@ -173,7 +154,6 @@ PhysBody* ModulePhysics::CreateRectangleSensor(int x, int y, int width, int heig
 	b->SetUserData(pbody);
 	pbody->width = width;
 	pbody->height = height;
-	//pbody->listener = listener;
 
 	return pbody;
 }
@@ -298,8 +278,6 @@ update_status ModulePhysics::PostUpdate()
 				break;
 			}
 
-			// TODO 1: If mouse button 1 is pressed ...
-			// App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN
 			// test if the current body contains mouse position
 			if(mouse_down == true && body_clicked == NULL)
 			{
@@ -311,8 +289,6 @@ update_status ModulePhysics::PostUpdate()
 
 	// If a body was selected we will attach a mouse joint to it
 	// so we can pull it around
-	// TODO 2: If a body was selected, create a mouse joint
-	// using mouse_joint class property
 	if(body_clicked != NULL && mouse_joint == NULL)
 	{
 		b2MouseJointDef def;
@@ -326,7 +302,6 @@ update_status ModulePhysics::PostUpdate()
 		mouse_joint = (b2MouseJoint*) world->CreateJoint(&def);
 	}
 
-	// TODO 3: If the player keeps pressing the mouse button, update
 	// target position and draw a red line between both anchor points
 	if(mouse_repeat == true && mouse_joint != NULL)
 	{
@@ -338,7 +313,7 @@ update_status ModulePhysics::PostUpdate()
 
 	}
 
-	// TODO 4: If the player releases the mouse button, destroy the joint
+	//If the player releases the mouse button, destroy the joint
 	if(mouse_up == true && mouse_joint != NULL)
 	{
 		world->DestroyJoint(mouse_joint);
@@ -406,8 +381,6 @@ int PhysBody::RayCast(int x1, int y1, int x2, int y2, float& normal_x, float& no
 	{
 		if(fixture->GetShape()->RayCast(&output, input, body->GetTransform(), 0) == true)
 		{
-			// do we want the normal ?
-
 			float fx = x2 - x1;
 			float fy = y2 - y1;
 			float dist = sqrtf((fx*fx) + (fy*fy));
@@ -448,7 +421,7 @@ PhysBody *ModulePhysics::CreateLauncher(int x, int y, int width, int height, b2P
 	joint_def.localAnchorB.Set(0, 0);
 	joint_def.enableLimit = true;
 	joint_def.upperTranslation = 0;
-	joint_def.lowerTranslation = -1; //-1
+	joint_def.lowerTranslation = -1; 
 	joint_def.enableMotor = true;
 	joint_def.maxMotorForce = 800.0f;
 	joint_def.motorSpeed = 0.0f;
@@ -458,62 +431,55 @@ PhysBody *ModulePhysics::CreateLauncher(int x, int y, int width, int height, b2P
 	return launcher;
 }
 
-PhysBody* ModulePhysics::CreateFlipper(b2Vec2 position, int * points, int size, b2Vec2 rotation_point, float32 lower_angle, float32 upper_angle, b2RevoluteJoint *joint)
-
+b2RevoluteJoint* ModulePhysics::Createclipper(b2Body* bodyA, b2Body* bodyB, int AnchorX, int AnchorY, int lowerAngle, int upperAngle)
 {
-	PhysBody* flipper = CreatePolygon(position.x, position.y, points, size);
-	PhysBody* rotor = CreateCircle(rotation_point.x, rotation_point.y, 12);
+	b2RevoluteJointDef revolute_joint;
 
-	b2RevoluteJointDef joint_def;
+	revolute_joint.bodyA = bodyA;
+	revolute_joint.bodyB = bodyB;
+	revolute_joint.collideConnected = false;
+	revolute_joint.localAnchorA.Set(PIXEL_TO_METERS(AnchorX), PIXEL_TO_METERS(AnchorY));
+	revolute_joint.localAnchorB.Set(0, 0);
+	revolute_joint.referenceAngle = 0 * DEGTORAD;
+	revolute_joint.enableLimit = true;
+	revolute_joint.lowerAngle = lowerAngle * DEGTORAD;
+	revolute_joint.upperAngle = upperAngle * DEGTORAD;
+	revolute_joint.enableMotor = true;
+	revolute_joint.maxMotorTorque = 300;
+	revolute_joint.motorSpeed = -100 * DEGTORAD;
 
-	joint_def.bodyA = flipper->body;
-	joint_def.bodyB = rotor->body;
-	joint_def.lowerAngle = lower_angle * DEGTORAD;
-	joint_def.upperAngle = upper_angle * DEGTORAD;
-	joint_def.localAnchorA.Set(0, 0);
-	joint_def.localAnchorB.Set(0, 0);
-	joint_def.collideConnected = false;
-	joint_def.enableLimit = true;
-
-	joint = (b2RevoluteJoint*)world->CreateJoint(&joint_def);
-	return flipper;
+	revolutejoint = (b2RevoluteJoint*)world->CreateJoint(&revolute_joint);
+	return revolutejoint;
 }
 
-PhysBody* ModulePhysics::CreatePolygon(int x, int y, int* points, int size, bool dynamic)
+PhysBody* ModulePhysics::CreatePolygon(int x, int y, int* points, int size, b2BodyType type)
 {
-	b2BodyDef body_def;
+	b2BodyDef body;
+	body.type = type;
+	body.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
 
-	if (dynamic)
-		body_def.type = b2_dynamicBody;
-	else
-		body_def.type = b2_staticBody;
+	b2Body* b = world->CreateBody(&body);
 
-	body_def.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
-
-	b2Body* b = world->CreateBody(&body_def);
-
-	b2PolygonShape shape;
-	b2Vec2* vertices = new b2Vec2[size / 2];
+	b2PolygonShape polygonShape;
+	b2Vec2* p = new b2Vec2[size / 2];
 
 	for (uint i = 0; i < size / 2; ++i)
 	{
-		vertices[i].x = PIXEL_TO_METERS(points[i * 2 + 0]);
-		vertices[i].y = PIXEL_TO_METERS(points[i * 2 + 1]);
+		p[i].x = PIXEL_TO_METERS(points[i * 2 + 0]);
+		p[i].y = PIXEL_TO_METERS(points[i * 2 + 1]);
 	}
 
-	shape.Set(vertices, size / 2);
+	polygonShape.Set(p, size / 2);
 
-	b2FixtureDef fixture;
-	fixture.shape = &shape;
-	fixture.density = 1.0f;
-	b->CreateFixture(&fixture);
+	b2FixtureDef myFixtureDef;
+	myFixtureDef.density = 1.0f;
+	myFixtureDef.shape = &polygonShape;
+	b->CreateFixture(&myFixtureDef);
 
-	delete vertices;
-
+	delete p;
 	PhysBody* pbody = new PhysBody();
 	pbody->body = b;
 	b->SetUserData(pbody);
 	pbody->width = pbody->height = 0;
-
 	return pbody;
 }

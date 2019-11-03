@@ -18,7 +18,6 @@ class PhysBody
 public:
 	PhysBody() : listener(NULL), body(NULL)
 	{}
-
 	void GetPosition(int& x, int &y) const;
 	float GetRotation() const;
 	bool Contains(int x, int y) const;
@@ -44,14 +43,14 @@ public:
 
 	PhysBody* CreateBouncer(float x, float y, int width, int height);
 	PhysBody *CreateLauncher(int x, int y, int width, int height, b2PrismaticJoint * joint, SDL_Texture *tex = nullptr);
-	PhysBody* CreateFlipper(b2Vec2 position, int* points, int size, b2Vec2 rotation_point, float32 lower_angle, float32 upper_angle, b2RevoluteJoint *joint);
-	PhysBody* CreatePolygon(int x, int y, int* points, int size, bool dynamic = true);
+	PhysBody* CreatePolygon(int x, int y, int* points, int size, b2BodyType type = b2_dynamicBody);
 	PhysBody* CreateCircle(int x, int y, int radius);
 	PhysBody* CreateRectangle(int x, int y, int width, int height);
-	PhysBody* CreateRectangleSensor(int x, int y, int width, int height);//, Module* listener);
+	PhysBody* CreateRectangleSensor(int x, int y, int width, int height);
 	PhysBody* CreateChain(int x, int y, int* points, int size);
+	b2RevoluteJoint* Createclipper(b2Body* bodyA, b2Body* bodyB, int AnchorX, int AnchorY, int lowerAngle, int upperAngle);
 
-	// b2ContactListener ---
+	// b2ContactListener
 	void BeginContact(b2Contact* contact);
 
 	b2World* world;
@@ -61,6 +60,7 @@ private:
 	bool debug;
 	
 	b2Body* ground;
+	b2RevoluteJoint* revolutejoint;
 
 	// Mouse joint
 	b2MouseJoint* mouse_joint;

@@ -43,7 +43,10 @@ bool ModuleSceneIntro::Start()
 	background = App->textures->Load("assets/Background/Background_finished.png");
 	launcherText = App->textures->Load("assets/Player_control/bouncer.png");
 	HUD = App->textures->Load("assets/HUD/HUD.png");
-	leftFlipperText = App->textures->Load("assets/Player_control/flipper1.png");
+
+	// Load flipper textures
+	clipper_left = App->textures->Load("assets/Player_control/clipper_1_left.png");
+	clipper_right = App->textures->Load("assets/Player_control/clipper_1_right.png");
 
 	// Load interactive textures
 	yellowbird = App->textures->Load("assets/Interactive/yellow_bird_on_.png");
@@ -62,6 +65,8 @@ bool ModuleSceneIntro::Start()
 	// Load audio and fx
 	hit_fx = App->audio->LoadFx("assets/Sounds/Fx/ball_hit.wav");
 	dead_fx = App->audio->LoadFx("assets/Sounds/Fx/ball_dead.wav");
+	flippers_left_fx = App->audio->LoadFx("assets/Sounds/Fx/flipper_left.wav");
+	flippers_right_fx = App->audio->LoadFx("assets/Sounds/Fx/flipper_right.wav");
 	bird_bird_fx = App->audio->LoadFx("assets/Sounds/Fx/hit_bird_bird.wav");
 	bird_girl_fx = App->audio->LoadFx("assets/Sounds/Fx/hit_bird_girl.wav");
 	ninjagirl_fx = App->audio->LoadFx("assets/Sounds/Fx/ninjagirl_hit.wav");
@@ -83,9 +88,9 @@ bool ModuleSceneIntro::Start()
 	Physbackground_1->body->SetType(b2_staticBody);
 	Physbackground_2 = App->physics->CreateChain(0, 0, BackgroundChain_2, 74);
 	Physbackground_2->body->SetType(b2_staticBody);
-	Physbottomleft = App->physics->CreateChain(0, 0, Bottom_left, 18);
+	Physbottomleft = App->physics->CreateChain(0, 0, Bottom_left, 16);
 	Physbottomleft->body->SetType(b2_staticBody);
-	Physbottomright = App->physics->CreateChain(0, 0, Bottom_right, 18);
+	Physbottomright = App->physics->CreateChain(0, 0, Bottom_right, 16);
 	Physbottomright->body->SetType(b2_staticBody);
 	Physrighttriangle = App->physics->CreateChain(0, 0, Right_triangle, 12);
 	Physrighttriangle->body->SetType(b2_staticBody);
@@ -138,29 +143,25 @@ bool ModuleSceneIntro::Start()
 	// Collider dead
 	Physdead = App->physics->CreateRectangleSensor(306, 1200, 250, 10);
 	
+	// Collider flippers
+	clipper_left_axis = App->physics->CreateCircle(210, 1100, 10);
+	clipper_left_axis->body->SetType(b2_staticBody);
+	clipper_right_axis = App->physics->CreateCircle(410, 1100, 10);
+	clipper_right_axis->body->SetType(b2_staticBody);
+	clipper_left_collider = App->physics->CreatePolygon(210, 1100, Flipper_L, 16);
+	clipper_right_collider = App->physics->CreatePolygon(410, 1100, Flipper_R, 16);
+
 	// Create colliders bouncer
 	launcher = App->physics->CreateLauncher(585 + 14.5, 999 + 90.5 - 15.5, 29, 150, launcher_joint);
 	launcher->listener = this;
 
+	// Create flippers
+	clipper_left_joint = App->physics->Createclipper(clipper_left_collider->body, clipper_left_axis->body, 20, 24, -10, 40);
+	clipper_right_joint = App->physics->Createclipper(clipper_right_collider->body, clipper_right_axis->body, 83, 19, -40, 10);
+	
+
 	// Play music
 	App->audio->PlayMusic("assets/Sounds/Music/pinball_music.ogg");
-
-	int flipper1[16] = {
-		0, 0,
-		9, -19,
-		24, -22,
-		97, -13,
-		105, -3,
-		98, 5,
-		17, 17,
-		4, 5
-	};
-
-	flipper_rect_l = { 0, 86, 92, 42 };
-	//0,86,92,42
-	left_flipper_joint = App->physics->CreateRectangle(195, 1090, 35, 5);
-	left_flipper_joint->body->SetType(b2_staticBody);
-	left_flipper = App->physics->CreateFlipper(b2Vec2(212, 1090), flipper1, 16, b2Vec2(190, 1100), 20, 10, flipper_l_joint);
 
 	return ret;
 }
@@ -173,6 +174,8 @@ bool ModuleSceneIntro::CleanUp()
 	// Unload textures
 	App->textures->Unload(balls);
 	App->textures->Unload(background);
+	App->textures->Unload(clipper_left);
+	App->textures->Unload(clipper_right);
 	App->textures->Unload(launcherText);
 	App->textures->Unload(HUD);
 	App->textures->Unload(yellowbird);
@@ -188,22 +191,16 @@ bool ModuleSceneIntro::CleanUp()
 	App->textures->Unload(bumper);
 	App->textures->Unload(littlebumper);
 
-	App->textures->Unload(leftFlipperText);
-
 	return true;
 }
 
 // Update: draw background
 update_status ModuleSceneIntro::Update()
 {
-	if(App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
-	{
-		ball = App->physics->CreateCircle(App->input->GetMouseX(), App->input->GetMouseY(), 14);
-		ball->listener = this;
-	}
-
 	// All draw functions ------------------------------------------------------
-
+	// Flipper motor
+	clipper_left_joint->SetMotorSpeed(-1000 * DEGTORAD);
+	clipper_right_joint->SetMotorSpeed(1000 * DEGTORAD);
 
 	// Create ball
 	if (ballIsCreated == false || dead_on == true)
@@ -267,11 +264,11 @@ update_status ModuleSceneIntro::Update()
 		if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
 		{
 			launcher_joint->SetMotorSpeed(-2);
-			bouncerSpeed += 1.2f;
+			bouncerSpeed += 0.5f;
 
-			if (bouncerSpeed > 60)
+			if (bouncerSpeed > 15)
 			{
-				bouncerSpeed = 60;
+				bouncerSpeed = 15;
 			}
 
 			if (spring_fx == false)
@@ -288,6 +285,40 @@ update_status ModuleSceneIntro::Update()
 			App->audio->PlayFx(springrelease_fx);
 			spring_fx = false;
 		}
+		// Flipper move
+		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
+		{
+			clipper_left_joint->SetMotorSpeed(1000 * DEGTORAD);
+			clipper_left_collider->GetPosition(clipper_left_x, clipper_left_y);
+			clipper_left_rotation = clipper_left_collider->GetRotation();
+
+			if (flippers_left_one_fx == false)
+			{
+				App->audio->PlayFx(flippers_left_fx);
+				flippers_left_one_fx = true;
+			}
+		}
+		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_UP)
+		{
+			flippers_left_one_fx = false;
+		}
+
+		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
+		{
+			clipper_right_joint->SetMotorSpeed(-1000 * DEGTORAD);
+			clipper_right_collider->GetPosition(clipper_right_x, clipper_right_y);
+			clipper_right_rotation = clipper_right_collider->GetRotation();
+
+			if (flippers_right_one_fx == false)
+			{
+				App->audio->PlayFx(flippers_right_fx);
+				flippers_right_one_fx = true;
+			}
+		}
+		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_UP)
+		{
+			flippers_right_one_fx = false;
+		}
 	}
 	int xB, yB;
 	launcher->GetPosition(xB, yB);
@@ -300,6 +331,17 @@ update_status ModuleSceneIntro::Update()
 	{
 		// Blit to screen
 		App->renderer->Blit(background, 0, 0);
+
+		// Blit flippers
+		//Get coord to blit the images
+		clipper_left_rotation = clipper_left_collider->GetRotation();
+		clipper_left_collider->GetPosition(clipper_left_x, clipper_left_y);
+
+		clipper_right_rotation = clipper_right_collider->GetRotation();
+		clipper_right_collider->GetPosition(clipper_right_x, clipper_right_y);
+
+		App->renderer->Blit(clipper_left, (clipper_left_x), (clipper_left_y), NULL, 1.0f, clipper_left_rotation, -5, -5);
+		App->renderer->Blit(clipper_right, (clipper_right_x), (clipper_right_y), NULL, 1.0f, clipper_right_rotation, -1, 0);
 
 		// Check all interactive blit
 		CheckBlit();
@@ -317,16 +359,6 @@ update_status ModuleSceneIntro::Update()
 
 		App->renderer->Blit(balls, ballPositionX, ballPositionY, NULL, 1.0f, rotate, 16, 16);
 		App->renderer->Blit(launcherText, 585, 999, NULL);
-	
-		if (App->input->GetKey(SDL_SCANCODE_A) == KEY_DOWN)
-		{
-			engageFlipper(left_flipper, -10.0f);
-			//	App->audio->PlayFx(flipper_fx);
-		}
-
-		int leftFlipPosX, leftFlipPosY;
-		left_flipper->GetPosition(leftFlipPosX, leftFlipPosY);
-		App->renderer->Blit(leftFlipperText, leftFlipPosX, leftFlipPosY - 20, NULL, 1.0f, left_flipper->GetRotation(), 16, 16);
 	}
 
 	if (App->win->endgame == true)
@@ -850,13 +882,5 @@ void ModuleSceneIntro::BonusBlit()
 		score += 20000;
 		App->audio->PlayFx(ninjagirlbonus_fx);
 		bonusninjagirl = true;
-	}
-}
-
-void ModuleSceneIntro::engageFlipper(PhysBody *flipper, float impulse)
-{
-	if (flipper)
-	{
-		flipper->body->ApplyAngularImpulse(impulse * 4, true);
 	}
 }
