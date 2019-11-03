@@ -117,7 +117,7 @@ public:
 
 	SDL_Rect flipper_rect_l;
 	SDL_Rect flipper_rect_r;
-
+=======
 	bool ballIsCreated = false;
 	bool firstBall = true;
 
@@ -168,7 +168,7 @@ public:
   
   //Flipper actions ===============================
 	void engageFlipper(PhysBody *flipper, float impulse);
-
+=======
 	bool bluebird_on = false;
 	bool pinkbird_on = false;
 	bool redbird_on = false;
