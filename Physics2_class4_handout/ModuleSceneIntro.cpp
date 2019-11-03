@@ -238,6 +238,7 @@ update_status ModuleSceneIntro::Update()
 	if (ballPositionY > DOWN_OFFSET)
 	{
 		App->renderer->camera.y = DOWN_CAMERA_OFFSET;
+
 	}
 
 	//create game ball
