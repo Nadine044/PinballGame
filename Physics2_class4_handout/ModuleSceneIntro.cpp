@@ -43,6 +43,7 @@ bool ModuleSceneIntro::Start()
 	background = App->textures->Load("assets/Background/Background_finished.png");
 	launcherText = App->textures->Load("assets/Player_control/bouncer.png");
 	HUD = App->textures->Load("assets/HUD/HUD.png");
+	leftFlipperText = App->textures->Load("assets/Player_control/flipper1.png");
 
 	// Load interactive textures
 	yellowbird = App->textures->Load("assets/Interactive/yellow_bird_on_.png");
@@ -144,6 +145,23 @@ bool ModuleSceneIntro::Start()
 	// Play music
 	App->audio->PlayMusic("assets/Sounds/Music/pinball_music.ogg");
 
+	int flipper1[16] = {
+		0, 0,
+		9, -19,
+		24, -22,
+		97, -13,
+		105, -3,
+		98, 5,
+		17, 17,
+		4, 5
+	};
+
+	flipper_rect_l = { 0, 86, 92, 42 };
+	//0,86,92,42
+	left_flipper_joint = App->physics->CreateRectangle(195, 1090, 35, 5);
+	left_flipper_joint->body->SetType(b2_staticBody);
+	left_flipper = App->physics->CreateFlipper(b2Vec2(212, 1090), flipper1, 16, b2Vec2(190, 1100), 20, 10, flipper_l_joint);
+
 	return ret;
 }
 
@@ -169,6 +187,8 @@ bool ModuleSceneIntro::CleanUp()
 	App->textures->Unload(actred);
 	App->textures->Unload(bumper);
 	App->textures->Unload(littlebumper);
+
+	App->textures->Unload(leftFlipperText);
 
 	return true;
 }
@@ -238,7 +258,6 @@ update_status ModuleSceneIntro::Update()
 	if (ballPositionY > DOWN_OFFSET)
 	{
 		App->renderer->camera.y = DOWN_CAMERA_OFFSET;
-
 	}
 
 	//create game ball
@@ -298,6 +317,16 @@ update_status ModuleSceneIntro::Update()
 
 		App->renderer->Blit(balls, ballPositionX, ballPositionY, NULL, 1.0f, rotate, 16, 16);
 		App->renderer->Blit(launcherText, 585, 999, NULL);
+	
+		if (App->input->GetKey(SDL_SCANCODE_A) == KEY_DOWN)
+		{
+			engageFlipper(left_flipper, -10.0f);
+			//	App->audio->PlayFx(flipper_fx);
+		}
+
+		int leftFlipPosX, leftFlipPosY;
+		left_flipper->GetPosition(leftFlipPosX, leftFlipPosY);
+		App->renderer->Blit(leftFlipperText, leftFlipPosX, leftFlipPosY - 20, NULL, 1.0f, left_flipper->GetRotation(), 16, 16);
 	}
 
 	if (App->win->endgame == true)
@@ -821,5 +850,13 @@ void ModuleSceneIntro::BonusBlit()
 		score += 20000;
 		App->audio->PlayFx(ninjagirlbonus_fx);
 		bonusninjagirl = true;
+	}
+}
+
+void ModuleSceneIntro::engageFlipper(PhysBody *flipper, float impulse)
+{
+	if (flipper)
+	{
+		flipper->body->ApplyAngularImpulse(impulse * 4, true);
 	}
 }

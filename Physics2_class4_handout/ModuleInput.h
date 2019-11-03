@@ -1,14 +1,9 @@
 #pragma once
 #include "Module.h"
 #include "Globals.h"
-#include "Application.h"
-#include "ModuleRender.h"
 
 #define MAX_MOUSE_BUTTONS 5
 #define MAX_KEYS 300
-#define UP_OFFSET 380
-#define DOWN_OFFSET 800
-
 
 enum KEY_STATE
 {
@@ -47,14 +42,7 @@ public:
 
 	int GetMouseY() const
 	{
-		if (App->renderer->camera.y < -300)
-		{
-			return mouse_y + 408;
-		}
-		else if(App->renderer->camera.y > -500)
-		{
-			return mouse_y;
-		}
+		return mouse_y + 408;
 	}
 
 private:

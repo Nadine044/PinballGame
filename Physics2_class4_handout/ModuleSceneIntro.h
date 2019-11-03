@@ -6,6 +6,7 @@
 
 class PhysBody;
 class b2PrismaticJoint;
+class b2RevoluteJoint;
 
 class ModuleSceneIntro : public Module
 {
@@ -103,7 +104,6 @@ public:
 
 	PhysBody* ball = nullptr;
 
-	b2PrismaticJoint* launcher_joint = NULL;
 	bool ballIsCreated = false;
 	bool firstBall = true;
 
@@ -201,6 +201,25 @@ public:
 	bool bonusbird = false;
 	bool bonussquare = false;
 	bool bonusninjagirl = false;
+
+	//Flippers
+	SDL_Rect flipper_rect_l;
+	SDL_Rect flipper_rect_r;
+
+	PhysBody* right_flipper = nullptr;
+	PhysBody* left_flipper = nullptr;
+
+	SDL_Texture* leftFlipperText = nullptr;
+
+	PhysBody* left_flipper_joint = nullptr;
+
+	//Flippers joints
+	//Joints
+	b2PrismaticJoint* launcher_joint = NULL;
+	b2RevoluteJoint* flipper_r_joint = NULL;
+	b2RevoluteJoint* flipper_l_joint = NULL;
+
+	void engageFlipper(PhysBody *flipper, float impulse);
 };
 // vermell nena
 // groc nena
