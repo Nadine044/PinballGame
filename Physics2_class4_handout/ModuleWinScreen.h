@@ -17,8 +17,16 @@ public:
 public:
 
 	SDL_Texture* winscreen = nullptr;
+	
 
 	bool endgame = false;
+	
+	// Score
+	int actualscore = 0;
+	int previousscore = 0;
+	int highscore = 0;
 
+	bool prevscore = false;
 
+	char score_textend[10];
 };

@@ -74,8 +74,6 @@ bool ModuleSceneIntro::Start()
 	springpull_fx = App->audio->LoadFx("assets/Sounds/Fx/spring_pull.wav");
 	springrelease_fx = App->audio->LoadFx("assets/Sounds/Fx/spring_release.wav");
 	
-	
-
 	// Load number for score
 	font_score = App->fonts->Load("assets/HUD/numbers.png", "1234567890", 1);
 
@@ -242,31 +240,33 @@ update_status ModuleSceneIntro::Update()
 
 	//create game ball
 	
-	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
+	if (App->win->endgame == false)
 	{
-		launcher_joint->SetMotorSpeed(-2);
-		bouncerSpeed += 1.2f;
+		if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
+		{
+			launcher_joint->SetMotorSpeed(-2);
+			bouncerSpeed += 1.2f;
 
-		if (bouncerSpeed > 60)
-		{
-			bouncerSpeed = 60;
+			if (bouncerSpeed > 60)
+			{
+				bouncerSpeed = 60;
+			}
+
+			if (spring_fx == false)
+			{
+				App->audio->PlayFx(springpull_fx);
+				spring_fx = true;
+			}
 		}
-		
-		if (spring_fx == false)
+		else if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_UP)
 		{
-			App->audio->PlayFx(springpull_fx);
-			spring_fx = true;
+			launcher_joint->SetMotorSpeed(bouncerSpeed);
+			bouncerSpeed = 0;
+
+			App->audio->PlayFx(springrelease_fx);
+			spring_fx = false;
 		}
 	}
-	else if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_UP)
-	{
-		launcher_joint->SetMotorSpeed(bouncerSpeed);
-		bouncerSpeed = 0;
-
-		App->audio->PlayFx(springrelease_fx);
-		spring_fx = false;
-	}
-
 	int xB, yB;
 	launcher->GetPosition(xB, yB);
 
@@ -274,25 +274,56 @@ update_status ModuleSceneIntro::Update()
 
 	//vector velocity 0
 
-	// Blit to screen
-	App->renderer->Blit(background, 0, 0);
-	
-	// Check all interactive blit
-	CheckBlit();
-	
-	App->renderer->Blit(HUD, App->renderer->camera.x * (-1), App->renderer->camera.y * (-1));
+	if (App->win->endgame == false)
+	{
+		// Blit to screen
+		App->renderer->Blit(background, 0, 0);
 
-	// Check score and balls for blit
-	ScoreBlit();
+		// Check all interactive blit
+		CheckBlit();
 
-	// Check bonus points
-	BonusBlit();
+		App->renderer->Blit(HUD, App->renderer->camera.x * (-1), App->renderer->camera.y * (-1));
 
-	addscore = false;
-	BallsBlit();
+		// Check score and balls for blit
+		ScoreBlit();
 
-	App->renderer->Blit(balls, ballPositionX, ballPositionY, NULL, 1.0f, rotate, 16, 16);
-	App->renderer->Blit(launcherText, 585, 999, NULL);
+		// Check bonus points
+		BonusBlit();
+
+		addscore = false;
+		BallsBlit();
+
+		App->renderer->Blit(balls, ballPositionX, ballPositionY, NULL, 1.0f, rotate, 16, 16);
+		App->renderer->Blit(launcherText, 585, 999, NULL);
+	}
+
+	if (App->win->endgame == true)
+	{
+		App->renderer->Blit(App->win->winscreen, 0, 0);
+
+		// Previous score
+		if (App->win->prevscore == false)
+		{
+			App->win->previousscore = App->win->actualscore;
+			App->win->prevscore = true;
+		}
+		sprintf_s(App->win->score_textend, 10, "%d", App->win->previousscore);
+		App->fonts->BlitText(300, 400, font_score, App->win->score_textend);
+
+		// Actual score
+		App->win->actualscore = score;
+		sprintf_s(App->win->score_textend, 10, "%d", App->win->actualscore);
+		App->fonts->BlitText(300, 280, font_score, App->win->score_textend);
+
+		// High score
+		if (App->win->actualscore > App->win->highscore)
+		{
+			App->win->highscore = App->win->actualscore;
+		}
+		sprintf_s(App->win->score_textend, 10, "%d", App->win->highscore);
+		App->fonts->BlitText(300, 520, font_score, App->win->score_textend);
+		
+	}
 
 	return UPDATE_CONTINUE;
 }
