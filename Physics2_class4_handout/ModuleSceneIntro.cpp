@@ -115,18 +115,24 @@ bool ModuleSceneIntro::Start()
 	ball->listener = this;
 
 	//Create flipper
-	int left_flipper2[8]
-	{
-		0,  12,
-		0 ,-12,
-		70,  7,
-		70 ,-7
+	// Pivot 0, 0
+	// Pivot 0, -23
+	int flipper1[16] = {
+		0, 0,
+		9, -19,
+		24, -22,
+		97, -13,
+		105, -3,
+		98, 5,
+		17, 17,
+		4, 5
 	};
+
 	flipper_rect_l = { 0, 86, 92, 42 };
 	//0,86,92,42
-	left_flipper_joint = App->physics->CreateRectangle(195, 1085, 25, 5);
+	left_flipper_joint = App->physics->CreateRectangle(195, 1090, 35, 5);
 	left_flipper_joint->body->SetType(b2_staticBody);
-	left_flipper = App->physics->CreateFlipper(b2Vec2(212, 1090), left_flipper2, 8, b2Vec2(190, 1100), -30, 10, flipper_l_joint);
+	left_flipper = App->physics->CreateFlipper(b2Vec2(212, 1090), flipper1, 16, b2Vec2(190, 1100), 20, 10, flipper_l_joint);
 	return ret;
 }
 
@@ -217,9 +223,15 @@ update_status ModuleSceneIntro::Update()
 	}
 	App->renderer->Blit(HUD, App->renderer->camera.x * (-1), App->renderer->camera.y * (-1));
 	App->renderer->Blit(balls, x, y, NULL, 1.0f, rotate, 16, 16);
-	App->renderer->Blit(launcherText, 585, 999, NULL);
-	App->renderer->Blit(NULL, 200, 1080, NULL, 1.0f);
-	App->renderer->Blit(leftFlipperText, SCREEN_WIDTH * 0.5 - 300, 800, &flipper_rect_l, 1.0f, left_flipper->GetRotation(), 30, 0);
+
+	int launcherPosX, launcherPosY;
+	launcher->GetPosition(launcherPosX, launcherPosY);
+	App->renderer->Blit(launcherText, launcherPosX, launcherPosY, NULL);
+
+	int leftFlipPosX, leftFlipPosY;
+	left_flipper->GetPosition(leftFlipPosX, leftFlipPosY);
+	App->renderer->Blit(leftFlipperText, leftFlipPosX, leftFlipPosY - 20, NULL, 1.0f, left_flipper->GetRotation(), 16, 16);
+	//App->renderer->Blit(leftFlipperText, SCREEN_WIDTH * 0.5 - 300, 800, &flipper_rect_l, 1.0f, left_flipper->GetRotation(), 30, 0);
 
 	return UPDATE_CONTINUE;
 }
@@ -253,6 +265,6 @@ void ModuleSceneIntro::engageFlipper(PhysBody *flipper, float impulse)
 {
 	if (flipper)
 	{
-		flipper->body->ApplyAngularImpulse(impulse, true);
+		flipper->body->ApplyAngularImpulse(impulse * 4, true);
 	}
 }
