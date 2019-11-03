@@ -274,10 +274,12 @@ update_status ModuleSceneIntro::Update()
 	}
 
 	// Get ball position
-
 	ball->GetPosition(ballPositionX, ballPositionY);
 	rotate = ball->GetRotation();
 	App->renderer->camera.y = -ballPositionY + (SCREEN_HEIGHT * 0.5);
+
+	// Get launcher position
+	launcher->GetPosition(launcherPositionX, launcherPositionY);
 
 
 	if (ballPositionY < UP_OFFSET)
@@ -421,8 +423,9 @@ update_status ModuleSceneIntro::Update()
 		addscore = false;
 		BallsBlit();
 
+		App->renderer->Blit(launcherText, launcherPositionX, launcherPositionY, NULL);
+
 		App->renderer->Blit(balls, ballPositionX, ballPositionY, NULL, 1.0f, rotate, 16, 16);
-		App->renderer->Blit(launcherText, 585, 999, NULL);
 	}
 
 	if (App->win->endgame == true)

@@ -144,6 +144,10 @@ public:
 	int ballPositionX;
 	int ballPositionY;
 
+	// Launcher props
+	int launcherPositionX;
+	int launcherPositionY;
+
 	// Clipper props
 	// Right
 	float clipper_right_rotation = 0;
